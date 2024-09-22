@@ -1,0 +1,9 @@
+User-agent: *
+Disallow:
+sitemap: https://fullhdphim.click/sitemap.xml
+User-agent: SemrushBot-7
+Disallow: /
+User-agent: Bingbot
+Disallow: /
+User-agent: Applebot-0.1
+Disallow: /

@@ -778,20 +778,6 @@
                                                                                {{ asset('uploads/movie/' . $movie->movie_image->image) }} @endif" alt="{{ $movie->title }}">
                                             <div class="mv-item-infor">
                                                 <h6><a href="{{ route('movie', $movie->slug) }}">{{ $movie->title }} <span>({{ $movie->year }})</span></a></h6>
-                                                <p class="rate"><i class="ion-android-star"></i><span> @php
-                                                    $api_imdb = Http::get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
-                                                    if ($api_imdb->status() == 200) {
-                                                    if ($api_imdb['Response'] == "True" && $api_imdb['imdbRating'] != "N/A") {
-                                                    $values = $api_imdb['imdbRating'];
-                                                    } elseif ($api_imdb['Response'] == "False") {
-                                                    $values = "0.0";
-                                                    } else {
-                                                    $values = "0.0";
-                                                    }
-                                                    } else
-                                                    return $values = "0.0";
-                                                    echo $values;
-                                                    @endphp</span> /10</p>
                                                
                                                 <p class="run-time"> Run Time: 2h21’</p>
                                               

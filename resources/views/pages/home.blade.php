@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="social-link">
-                <p>Follow us: </p>
+                <p>Follow chúng tôi: </p>
                 <a href="#"><i class="ion-social-facebook"></i></a>
                 <a href="#"><i class="ion-social-twitter"></i></a>
                 <a href="#"><i class="ion-social-googleplus"></i></a>
@@ -49,7 +49,7 @@
             <div class="col-md-12">
                 <div class="title-hd">
                     <h2>Phim Âu Mỹ</h2>
-                    <a href="#" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
+                    <a href="{{ route('country','au-my') }}" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
                 </div>
                 <div class="tabs">
                     <ul class="tab-links">
@@ -164,7 +164,7 @@
                 </div>
                 <div class="title-hd">
                     <h2>Phim Netflix</h2>
-                    <a href="#" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
+                    <a href="{{ route('genre','netflix') }}" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
                 </div>
                 <div class="tabs">
                     <ul class="tab-links">
@@ -209,7 +209,7 @@
                 </div>
                 <div class="title-hd">
                     <h2>Phim Bộ</h2>
-                    <a href="#" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
+                    <a href="{{ route('category','tv-series') }}" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
                 </div>
                 <div class="tabs">
                     <ul class="tab-links">
@@ -234,7 +234,7 @@
                                                     alt="{{ $movie['movie']->title }}" width="190" height="284" style="width: 190px; height:230px;" loading="lazy">
                                             </div>
                                             <div class="hvr-inner">
-                                                <a href="moviesingle.html"> Xem <i
+                                                <a href="{{ route('movie',$movie['movie']->slug) }}"> Xem <i
                                                         class="ion-android-arrow-dropright"></i> </a>
                                             </div>
                                             <div class="title-in">
@@ -378,7 +378,7 @@
             <div class="col-md-12">
                 <div class="title-hd">
                     <h2>Phim Hoạt Hình</h2>
-                    <a href="#" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
+                    <a href="{{ route('genre','hoat-hinh') }}" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
                 </div>
                 <div class="tabs">
                     <ul class="tab-links">
@@ -423,7 +423,7 @@
                 </div>
                 <div class="title-hd">
                     <h2>Phim Kinh Dị</h2>
-                    <a href="#" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
+                    <a href="{{ route('genre','kinh-di') }}" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
                 </div>
                 <div class="tabs">
                     <ul class="tab-links">

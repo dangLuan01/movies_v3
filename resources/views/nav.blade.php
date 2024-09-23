@@ -28,7 +28,7 @@
                     </li>
                     @foreach($category as $cate)
                     <li class="dropdown first">
-                        <a href="moviegrid.html" class="btn btn-default dropdown-toggle lv1">
+                        <a href="{{ route('category',$cate->slug) }}" class="btn btn-default dropdown-toggle lv1">
                             {{ $cate->title }}
                         </a>
 

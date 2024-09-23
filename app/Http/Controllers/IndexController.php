@@ -393,75 +393,37 @@ class IndexController extends Controller
 
         $cate_movie = Category::where('slug', $slug)->first();
         $category_page = Movie::with(['movie_image' => function ($thumb) {
-            $thumb->where('is_thumbnail', 1);
+            $thumb->where('is_thumbnail', 0);
         }])->with(['episode' => function ($ep) {
             $ep->orderBy('episode', 'ASC');
-        }])->where('status', 1)->where('category_id', $cate_movie->id)->get();
+        }])->where('status', 1)->where('category_id', $cate_movie->id)->paginate(20);
 
-        $hot = Movie::with(['episode' => function ($query) {
-            $query->orderBy('episode', 'ASC');
-        }])->where('hot', 1)->with(['movie_image' => function ($thumb) {
-            $thumb->where('is_thumbnail', 1);
-        }])->where('status', 1)->where('category_id', $cate_movie->id)->orderBy('updated_at', 'DESC')->get();
+        $movie_cate_with_ratings = [];
 
-        $gen_slug = Genre::where('title', 'LIKE', '%hoat hinh%')->first();
-
-        $movie_genre = Movie_Genre::where('genre_id', $gen_slug->id)->get();
-        $many_genre = [];
-        foreach ($movie_genre as $key => $movi) {
-            $many_genre[] = $movi->movie_id;
-        }
-        $movie_animation = Movie::whereIn('id', $many_genre)->where('category_id', $cate_movie->id)->where('status', 1)->with(['episode' => function ($query) {
-            $query->orderBy('episode', 'ASC');
-        }])->with(['movie_image' => function ($thumb) {
-            $thumb->where('is_thumbnail', 1);
-        }])->orderBy('updated_at', 'DESC')->get();
-
-        //movie asia
-        $list_country = ['Viet Nam', 'Nhat Ban', 'Trung Quoc', 'Thai Lan', 'Han Quoc', 'Dai Loan'];
-        $many_country = [];
-        foreach ($list_country as $countr) {
-            $country_slug = Country::where('title', 'LIKE', '%' . $countr . '%')->get();
-            foreach ($country_slug as $coun) {
-                $many_country[] = $coun->id;
+       
+        $responses = Http::pool(function ($pool) use ($category_page) {
+            return $category_page->map(function ($movie) use ($pool) {
+                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+            });
+        });
+        foreach ($responses as $key => $response) {
+            if ($response->successful()) {
+                $imdbRating_country = ($response['Response'] == "True" && $response['imdbRating'] != "N/A")
+                    ? $response['imdbRating']
+                    : "0.0";
+            } else {
+                $imdbRating_country = "0.0";
             }
+
+            $movie_cate_with_ratings[] = [
+                'movie' => $category_page[$key],
+                'imdbRating' => $imdbRating_country,
+            ];
         }
-
-        $movie_asia = Movie::whereIn('country_id', $many_country)->where('category_id', $cate_movie->id)->where('status', 1)->with(['episode' => function ($query) {
-            $query->orderBy('episode', 'ASC');
-        }])->with(['movie_image' => function ($thumb) {
-            $thumb->where('is_thumbnail', 1);
-        }])->orderBy('updated_at', 'DESC')->get();
-
-
-
-        //only netflix
-        $gen_slug_netflix = Genre::where('title', 'LIKE', '%netflix%')->first();
-
-        $movie_genre_netflix = Movie_Genre::where('genre_id', $gen_slug_netflix->id)->get();
-        $many_genre_netflix = [];
-        foreach ($movie_genre_netflix as $key => $movi_netflix) {
-            $many_genre_netflix[] = $movi_netflix->movie_id;
-        }
-        $movie_netlix = Movie::whereIn('id', $many_genre_netflix)->where('category_id', $cate_movie->id)->where('status', 1)->with(['episode' => function ($query) {
-            $query->orderBy('episode', 'ASC');
-        }])->with(['movie_image' => function ($thumb) {
-            $thumb->where('is_thumbnail', 1);
-        }])->orderBy('updated_at', 'DESC')->get();
-
-        //movie asia
-
-
-        $country__korea_slug = Country::where('title', 'LIKE', '%han quoc%')->first();
-
-        $movie_korea = Movie::where('country_id', $country__korea_slug->id)->where('category_id', $cate_movie->id)->where('status', 1)->with(['episode' => function ($query) {
-            $query->orderBy('episode', 'ASC');
-        }])->with(['movie_image' => function ($thumb) {
-            $thumb->where('is_thumbnail', 1);
-        }])->orderBy('updated_at', 'DESC')->get();
+       
         $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
         $url_update = $api_ophim['pathImage'];
-        return view('pages.category', compact('category', 'genre', 'country', 'category_page', 'hot', 'movie_animation', 'gen_slug', 'cate_movie', 'movie_asia', 'movie_netlix', 'movie_korea', 'url_update'));
+        return view('pages.category', compact('category', 'genre', 'country', 'movie_cate_with_ratings', 'url_update','cate_movie','category_page'));
     }
     public function year($year)
     {
@@ -518,15 +480,37 @@ class IndexController extends Controller
         foreach ($movie_genre as $key => $movi) {
             $many_genre[] = $movi->movie_id;
         }
-        $movie = Movie::whereIn('id', $many_genre)->where('status', 1)->with(['episode' => function ($query) {
+        $movie_genre = Movie::whereIn('id', $many_genre)->where('status', 1)->with(['episode' => function ($query) {
             $query->orderBy('episode', 'ASC');
         }])->with(['movie_image' => function ($thumb) {
-            $thumb->where('is_thumbnail', 1);
+            $thumb->where('is_thumbnail', 0);
         }])->orderBy('updated_at', 'DESC')->paginate(20);
+        $movie_genre_with_ratings = [];
+
+       
+        $responses = Http::pool(function ($pool) use ($movie_genre) {
+            return $movie_genre->map(function ($movie) use ($pool) {
+                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+            });
+        });
+        foreach ($responses as $key => $response) {
+            if ($response->successful()) {
+                $imdbRating_genre = ($response['Response'] == "True" && $response['imdbRating'] != "N/A")
+                    ? $response['imdbRating']
+                    : "0.0";
+            } else {
+                $imdbRating_genre = "0.0";
+            }
+
+            $movie_genre_with_ratings[] = [
+                'movie' => $movie_genre[$key],
+                'imdbRating' => $imdbRating_genre,
+            ];
+        }
         $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
         $url_update = $api_ophim['pathImage'];
         //dd($many_genre);
-        return view('pages.genre', compact('category', 'genre', 'country', 'gen_slug', 'movie', 'url_update'));
+        return view('pages.genre', compact('category', 'genre', 'country', 'gen_slug', 'movie_genre_with_ratings', 'url_update','movie_genre'));
     }
     public function country($slug)
     {
@@ -537,12 +521,36 @@ class IndexController extends Controller
         if (!isset($count_slug)) {
             return redirect()->back();
         }
-        $movie = Movie::where('country_id', $count_slug->id)->where('status', 1)->withCount(['episode' => function ($query) {
+        $movie_country = Movie::where('country_id', $count_slug->id)->where('status', 1)->withCount(['episode' => function ($query) {
             $query->select(DB::raw('count(distinct(episode))'));
         }])->orderBy('updated_at', 'DESC')->paginate(20);
+        
+            
+        $movie_country_with_ratings = [];
+
+        $responses = Http::pool(function ($pool) use ($movie_country) {
+            return $movie_country->map(function ($movie) use ($pool) {
+                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+            });
+        });
+        foreach ($responses as $key => $response) {
+            if ($response->successful()) {
+                $imdbRating_country = ($response['Response'] == "True" && $response['imdbRating'] != "N/A")
+                    ? $response['imdbRating']
+                    : "0.0";
+            } else {
+                $imdbRating_country = "0.0";
+            }
+
+            $movie_country_with_ratings[] = [
+                'movie' => $movie_country[$key],
+                'imdbRating' => $imdbRating_country,
+            ];
+        }
+        
         $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
         $url_update = $api_ophim['pathImage'];
-        return view('pages.country', compact('category', 'genre', 'country', 'count_slug', 'movie', 'url_update'));
+        return view('pages.country', compact('category', 'genre', 'country', 'count_slug', 'movie_country_with_ratings', 'url_update','movie_country'));
     }
     public function all_movies()
     {

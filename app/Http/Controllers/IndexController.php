@@ -104,7 +104,28 @@ class IndexController extends Controller
                 ->orderBy('updated_at', 'DESC')
                 ->get(['id', 'title', 'updated_at', 'imdb','slug']);
         });
-        
+        $responses = Http::pool(function ($pool) use ($hot) {
+            return collect($hot)->map(function ($movie) use ($pool) {
+                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+            });
+        });
+
+        // Xử lý các phản hồi
+        foreach ($responses as $key => $response) {
+            if ($response->successful()) {
+                $imdbRating_hot = $response['Response'] == "True" && $response['imdbRating'] != "N/A"
+                    ? $response['imdbRating']
+                    : "0.0";
+            } else {
+                $imdbRating_hot = "0.0";
+            }
+    
+            $hot_with_ratings[] = [
+                'movie' => $hot[$key],
+                'imdbRating' => $imdbRating_hot,
+            ];
+        }
+      
         // TOP VIEW MOVIES
         $topview = Cache::remember('topview', 300, function () {
             return Movie::select('title', 'slug', 'image', DB::raw('SUM(count_views) as count_views'))
@@ -135,6 +156,28 @@ class IndexController extends Controller
                 ->limit(16)
                 ->get(['id', 'title', 'updated_at', 'imdb','slug']);
         });
+        $responses = Http::pool(function ($pool) use ($movie_animation) {
+            return collect($movie_animation)->map(function ($movie) use ($pool) {
+                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+            });
+        });
+
+        // Xử lý các phản hồi
+        foreach ($responses as $key => $response) {
+            if ($response->successful()) {
+                $imdbRating_animation = $response['Response'] == "True" && $response['imdbRating'] != "N/A"
+                    ? $response['imdbRating']
+                    : "0.0";
+            } else {
+                $imdbRating_animation = "0.0";
+            }
+    
+            $movie_animation_with_ratings[] = [
+                'movie' => $movie_animation[$key],
+                'imdbRating' => $imdbRating_animation,
+            ];
+        }
+        
 
         // NETFLIX MOVIES
         $movie_netflix = Cache::remember('movie_netflix', 300, function () {
@@ -153,6 +196,27 @@ class IndexController extends Controller
                 ->limit(12)
                 ->get(['id', 'title', 'updated_at', 'imdb','slug']);
         });
+        $responses = Http::pool(function ($pool) use ($movie_netflix) {
+            return collect($movie_netflix)->map(function ($movie) use ($pool) {
+                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+            });
+        });
+
+        // Xử lý các phản hồi
+        foreach ($responses as $key => $response) {
+            if ($response->successful()) {
+                $imdbRating_netflix = $response['Response'] == "True" && $response['imdbRating'] != "N/A"
+                    ? $response['imdbRating']
+                    : "0.0";
+            } else {
+                $imdbRating_netflix = "0.0";
+            }
+    
+            $movie_netflix_with_ratings[] = [
+                'movie' => $movie_netflix[$key],
+                'imdbRating' => $imdbRating_netflix,
+            ];
+        }
 
         // OSCAR MOVIES
         $movies_oscar = Cache::remember('movies_oscar', 300, function () {
@@ -171,6 +235,27 @@ class IndexController extends Controller
                 ->limit(16)
                 ->get(['id', 'title', 'updated_at', 'imdb','slug']);
         });
+        $responses = Http::pool(function ($pool) use ($movies_oscar) {
+            return collect($movies_oscar)->map(function ($movie) use ($pool) {
+                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+            });
+        });
+
+        // Xử lý các phản hồi
+        foreach ($responses as $key => $response) {
+            if ($response->successful()) {
+                $imdbRating_oscar = $response['Response'] == "True" && $response['imdbRating'] != "N/A"
+                    ? $response['imdbRating']
+                    : "0.0";
+            } else {
+                $imdbRating_oscar = "0.0";
+            }
+    
+            $movie_oscar_with_ratings[] = [
+                'movie' => $movies_oscar[$key],
+                'imdbRating' => $imdbRating_oscar,
+            ];
+        }
 
         // MOVIE US
         $movie_us = Cache::remember('movie_us', 300, function () use ($country_ids) {
@@ -184,6 +269,27 @@ class IndexController extends Controller
                 ->limit(12)
                 ->get(['id', 'title', 'updated_at', 'imdb','slug']);
         });
+        $responses = Http::pool(function ($pool) use ($movie_us) {
+            return collect($movie_us)->map(function ($movie) use ($pool) {
+                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+            });
+        });
+
+        // Xử lý các phản hồi
+        foreach ($responses as $key => $response) {
+            if ($response->successful()) {
+                $imdbRating_us = $response['Response'] == "True" && $response['imdbRating'] != "N/A"
+                    ? $response['imdbRating']
+                    : "0.0";
+            } else {
+                $imdbRating_us = "0.0";
+            }
+    
+            $movie_us_with_ratings[] = [
+                'movie' => $movie_us[$key],
+                'imdbRating' => $imdbRating_us,
+            ];
+        }
 
         // MOVIE US COMING SOON
         $movie_us_coming = Cache::remember('movie_us_coming', 300, function () use ($country_ids) {
@@ -208,7 +314,30 @@ class IndexController extends Controller
                 ->limit(16)
                 ->get(['id', 'title', 'updated_at', 'imdb','slug']);
         });
+        
+        $responses = Http::pool(function ($pool) use ($tv_series) {
+            return collect($tv_series)->map(function ($movie) use ($pool) {
+                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+            });
+        });
 
+        // Xử lý các phản hồi
+        foreach ($responses as $key => $response) {
+            if ($response->successful()) {
+                $imdbRating = $response['Response'] == "True" && $response['imdbRating'] != "N/A"
+                    ? $response['imdbRating']
+                    : "0.0";
+            } else {
+                $imdbRating = "0.0";
+            }
+    
+            $tv_series_with_ratings[] = [
+                'movie' => $tv_series[$key],
+                'imdbRating' => $imdbRating,
+            ];
+        }
+       
+       
         // HORROR MOVIES
         $movie_horror = Cache::remember('movie_horror', 300, function () {
             $gen_horror_slug = Genre::where('title', 'LIKE', '%kinh di%')->first();
@@ -227,11 +356,33 @@ class IndexController extends Controller
                 ->limit(12)
                 ->get(['id', 'title', 'updated_at', 'imdb','slug']);
         });
+        $responses = Http::pool(function ($pool) use ($movie_horror) {
+            return collect($movie_horror)->map(function ($movie) use ($pool) {
+                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+            });
+        });
+
+        // Xử lý các phản hồi
+        foreach ($responses as $key => $response) {
+            if ($response->successful()) {
+                $imdbRating_horror = $response['Response'] == "True" && $response['imdbRating'] != "N/A"
+                    ? $response['imdbRating']
+                    : "0.0";
+            } else {
+                $imdbRating_horror = "0.0";
+            }
+    
+            $movie_horror_with_ratings[] = [
+                'movie' => $movie_animation[$key],
+                'imdbRating' => $imdbRating_horror,
+            ];
+        }
 
     
         $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
         $url_update = $api_ophim['pathImage'];
-        return view('pages.home', compact('category', 'genre', 'hot',  'movie_animation', 'movie_us', 'tv_series', 'movie_horror', 'url_update','movies_oscar','movie_netflix','movie_us_coming','topview'));
+        
+        return view('pages.home', compact('category', 'genre', 'hot_with_ratings',  'movie_animation_with_ratings', 'movie_us_with_ratings', 'tv_series_with_ratings', 'movie_horror_with_ratings', 'url_update','movie_oscar_with_ratings','movie_netflix_with_ratings','movie_us_coming','topview'));
     }
     public function category($slug)
     {

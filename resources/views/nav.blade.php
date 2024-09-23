@@ -63,10 +63,13 @@
         <div class="top-search">
             <select>
                 <option value="united">TV show</option>
-                <option value="saab">Others</option>
+                <option value="saab">Movie</option>
             </select>
-            <input type="text" placeholder="Search for a movie, TV Show or celebrity that you are looking for">
+            <input id="timkiem" type="text" placeholder="Tìm kiếm phim cho bạn">
         </div>
+        <ul class="list-group" id="result"> 
+            
+        </ul>
     </div>
 </header>
 <!-- END | Header -->

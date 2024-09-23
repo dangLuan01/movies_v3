@@ -36,13 +36,6 @@ class IndexController extends Controller
 
     public function timkiem()
     {
-        if (isset($_GET['search'])) {
-            $search = $_GET['search'];
-            $category = Category::orderBy('id', 'ASC')->where('status', 1)->get();
-            $genre = Genre::where('status', 1)->orderBy('id', 'DESC')->get();
-            $country = Country::where('status', 1)->orderBy('id', 'DESC')->get();
-            //$cate_slug = Category::where('slug', $slug)->first(); 
-
             $movie = Movie::where(function ($querys) {
                 $search = $_GET['search'];
                 $cast_slug = Cast::where('title', 'LIKE', '%' . $search . '%')->first();
@@ -61,22 +54,12 @@ class IndexController extends Controller
                 $ep->orderBy('episode', 'ASC');
             }])->with(['movie_image' => function ($thumb) {
                 $thumb->where('is_thumbnail', 1);
-            }])->orderBy('id', 'DESC')->paginate(5);
+            }])->orderBy('id', 'DESC')->get();
             
             $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
             $url_update = $api_ophim['pathImage'];
-            //dd($movie);
-
-
-            // $movie = Movie::whereIn('id', $many_cast)->where('status', 1)->withCount(['episode' => function ($query) {
-            //     $query->select(DB::raw('count(distinct(episode))'));
-            // }])->orderBy('updated_at', 'DESC')->paginate(12);
-
-            return view('pages.timkiem', compact('category', 'genre', 'country', 'search', 'movie', 'url_update'));
-        } else {
-            $category = Category::orderBy('id', 'ASC')->where('status', 1)->get();
-            return view('pages.search', compact('category'));
-        }
+            
+            return response()->json($movie);
     }
     public function home()
     {
@@ -356,6 +339,7 @@ class IndexController extends Controller
                 ->limit(12)
                 ->get(['id', 'title', 'updated_at', 'imdb','slug']);
         });
+        
         $responses = Http::pool(function ($pool) use ($movie_horror) {
             return collect($movie_horror)->map(function ($movie) use ($pool) {
                 return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
@@ -373,12 +357,11 @@ class IndexController extends Controller
             }
     
             $movie_horror_with_ratings[] = [
-                'movie' => $movie_animation[$key],
+                'movie' => $movie_horror[$key],
                 'imdbRating' => $imdbRating_horror,
             ];
         }
 
-    
         $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
         $url_update = $api_ophim['pathImage'];
         

@@ -114,6 +114,40 @@
     <script src="{{ asset('js/plugins.js') }}"></script>
     <script src="{{ asset('js/plugins2.js') }}"></script>
     <script src="{{ asset('js/custom.js') }}"></script>
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            $('#timkiem').keyup(function() {
+                $('#result').html('');
+                var search = $('#timkiem').val();
+                if (search != '') {
+                $('#result').css('display', 'inherit');
+                function reqListener() {
+                // Parse JSON response
+                const responseArray = JSON.parse(this.responseText);
+                $('#result').empty();
+                
+                // Loop through the array and append each item to the list
+                responseArray.forEach(item => {
+                    const imageUrl = item.movie_image.image.startsWith('https') ? item.movie_image.image : '/uploads/movie/' + item.movie_image.image;
+                    $('#result').append(`<li class="list-group-item" style="cursor:pointer;color: aliceblue"><img src="${imageUrl}" height="100" width="100"><a href="/movie/${item.slug}">${ item.title }</a></li>`);
+                });
+                }
+                const req = new XMLHttpRequest();
+                req.addEventListener("load", reqListener);
+                req.open("GET", "/tim-kiem?search=" + search);
+                req.send();
+                } else {
+                    $('#result').css('display', 'none');
+                }
+            })
+            $('#result').on('click', 'li', function() {
+                // var click_text = $(this).text().split('->');
+                // $('#timkiem').val($.trim(click_text[0]));
+                // $("#result").html('');
+                // $('#result').css('display', 'none')
+            });
+        })
+    </script>
 </body>
 
 </html>

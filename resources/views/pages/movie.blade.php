@@ -43,7 +43,7 @@
         <div class="row ipad-width2">
             <div class="col-md-4 col-sm-12 col-xs-12">
                 <div class="movie-img sticky-sb">
-                    <img src="{{ $movie->movie_image->image }}" alt="">
+                    <img id="wishlist_movieimage" src="{{ $movie->movie_image->image }}" alt="{{ $movie->title }}">
                     <div class="movie-btn">
                         <div class="btn-transform transform-vertical red">
                             <div><a href="#" class="item item-1 redbtn"> <i class="ion-play"></i> Xem ngay</a>
@@ -767,17 +767,17 @@
                                     <div class="row">
                                         <h3>Phim liên quan đến</h3>
                                         <h2>{{ $movie->title }}</h2>
-                                        @foreach($related as $movie)
+                                        @foreach($related as $mov)
                                         <div class="movie-item-style-2">
                                             <img src="@php
-                                            $image_check = substr($movie->movie_image->image, 0, 5);
-                                            $startPos = strpos($movie->movie_image->image, 'movies/');
-                                            $image = substr($movie->movie_image->image, $startPos + strlen('movies/')); @endphp
+                                            $image_check = substr($mov->movie_image->image, 0, 5);
+                                            $startPos = strpos($mov->movie_image->image, 'movies/');
+                                            $image = substr($mov->movie_image->image, $startPos + strlen('movies/')); @endphp
                                                                             @if ($image_check == 'https') {{ $url_update . $image }}
                                                                             @else
-                                                                               {{ asset('uploads/movie/' . $movie->movie_image->image) }} @endif" alt="{{ $movie->title }}">
+                                                                               {{ asset('uploads/movie/' . $mov->movie_image->image) }} @endif" alt="{{ $mov->title }}">
                                             <div class="mv-item-infor">
-                                                <h6><a href="{{ route('movie', $movie->slug) }}">{{ $movie->title }} <span>({{ $movie->year }})</span></a></h6>
+                                                <h6><a href="{{ route('movie', $mov->slug) }}">{{ $mov->title }} <span>({{ $movie->year }})</span></a></h6>
                                                
                                                 <p class="run-time"> Run Time: 2h21’</p>
                                               
@@ -809,5 +809,53 @@
         </div>
     </div>
 </div>
+<input type="hidden" id="witshlist_moviename" value="{{ $movie->title }}">
+<input type="hidden" id="witshlist_movieslug" value="{{ $movie->slug }}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+        var name = document.getElementById('witshlist_moviename').value;
+        var slug = document.getElementById('witshlist_movieslug').value;
+        var img = document.getElementById('wishlist_movieimage').src;
+        var url = window.location;
+        var genres = <?php echo json_encode($genre); ?>;
+
+        function add_recent() {
+            var id = {{ $movie->id }};
+            var currentTime = new Date().getTime();
+
+            var newItems = {
+                'id': id,
+                'name': name,
+                'slug': slug,
+                'img': img,
+                'url': url,
+                'genres': genres,
+                'time': currentTime
+            }
+           
+            if (localStorage.getItem('data_recent') == null) {
+                localStorage.setItem('data_recent', '[]');
+            }
+            var old_datas = JSON.parse(localStorage.getItem('data_recent'));
+            
+            var matchess = $.grep(old_datas, function(obj) {
+                return obj.id == id;
+
+            })
+            if (matchess.length) {
+                matchess[0].time = currentTime;
+                matchess[0].img = img;
+                matchess[0].url = url;
+            } else {
+                old_datas.push(newItems);
+            }
+            old_datas.sort(function(a, b) {
+                return b.time - a.time;
+            });
+            localStorage.setItem('data_recent', JSON.stringify(old_datas));
+            
+        }
+        add_recent();
+</script>
 
 @endsection

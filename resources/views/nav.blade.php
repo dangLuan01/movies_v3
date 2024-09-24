@@ -43,7 +43,7 @@
                     </li> --}}
                     <li class="dropdown first">
                         <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-                            Tiếp tục xem
+                            Đã xem gần đây
                         </a>
 
                     </li>
@@ -63,8 +63,8 @@
 
         <div class="top-search">
             <select>
-                <option value="united">TV show</option>
                 <option value="saab">Movie</option>
+                <option value="united">TV show</option>
             </select>
             <input id="timkiem" type="text" placeholder="Tìm kiếm phim cho bạn">
         </div>

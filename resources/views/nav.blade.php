@@ -42,7 +42,7 @@
 
                     </li> --}}
                     <li class="dropdown first">
-                        <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+                        <a href="/my-recent" class="btn btn-default dropdown-toggle lv1">
                             Đã xem gần đây
                         </a>
 

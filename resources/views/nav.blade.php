@@ -34,7 +34,7 @@
 
                     </li>
                     @endforeach
-                    
+
                     {{-- <li class="dropdown first">
                         <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
                             Phim Bộ
@@ -60,6 +60,7 @@
         </nav>
 
         <!-- top search form -->
+
         <div class="top-search">
             <select>
                 <option value="united">TV show</option>
@@ -67,9 +68,53 @@
             </select>
             <input id="timkiem" type="text" placeholder="Tìm kiếm phim cho bạn">
         </div>
-        <ul class="list-group" id="result"> 
-            
-        </ul>
+        <div class="top-search">
+            <style>
+                #result {
+                    display: flex;
+                    flex-direction: column;
+                    max-height: 400px;
+                    overflow-y: auto; 
+                }
+                .top-search__list {
+
+                    width: 100%;
+                    background: #233a50;
+                    border: 4px solid #020d18;
+                    border-radius: 4px;
+                }
+
+                .top-search__item {
+                    padding: 8px 10px 8px 20px;
+                }
+
+                .top-search__item--container {
+                    display: flex;
+                }
+
+                .top-search__item--container .image-wrapper {
+                    flex: 0 0 90px;
+                }
+
+                .top-search .image-wrapper__inner {
+                    position: relative;
+                }
+
+                .result-meta {
+                    padding-left: 10px;
+                }
+
+                .result-meta__title {
+                    color: #fff;
+                    font-family: Nunito, sans-serif;
+                    font-size: 1.1em;
+                    font-weight: 700;
+                }
+            </style>
+            <div id="result" class="top-search__list" style="display: block;">
+
+            </div>
+        </div>
     </div>
 </header>
 <!-- END | Header -->

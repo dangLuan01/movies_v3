@@ -77,7 +77,7 @@ class IndexController extends Controller
 
         // HOT MOVIES
         $hot = Cache::remember('hot_movie', 300, function () {
-            return Movie::where('hot', 1)
+            return Movie::with('movie_trailer')->where('hot', 1)
                 ->where('status', 1)
                 ->with(['episode' => function ($query) {
                     $query->orderBy('episode', 'ASC');
@@ -85,8 +85,9 @@ class IndexController extends Controller
                     $thumb->where('is_thumbnail', 0);
                 }])
                 ->orderBy('updated_at', 'DESC')
-                ->get(['id', 'title', 'updated_at', 'imdb','slug']);
+                ->limit(9)->get();
         });
+        
         $responses = Http::pool(function ($pool) use ($hot) {
             return collect($hot)->map(function ($movie) use ($pool) {
                 return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');

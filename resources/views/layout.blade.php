@@ -129,7 +129,23 @@
                 // Loop through the array and append each item to the list
                 responseArray.forEach(item => {
                     const imageUrl = item.movie_image.image.startsWith('https') ? item.movie_image.image : '/uploads/movie/' + item.movie_image.image;
-                    $('#result').append(`<li class="list-group-item" style="cursor:pointer;color: aliceblue"><img src="${imageUrl}" height="100" width="100"><a href="/movie/${item.slug}">${ item.title }</a></li>`);
+                    $('#result').append(`     
+                        <div class="top-search__item">
+                            <a href="/movie/${item.slug}">
+                                <div class="top-search__item--container">
+                                    <div class="image-wrapper">
+                                        <div class="image-wrapper__inner">
+                                            <img src="${imageUrl}" alt="${item.title}">
+                                        </div>
+                                    </div>
+                                    <div class="result-meta">
+                                        <div class="result-meta__title">${item.title} (${item.year}) </span></div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                    `);
                 });
                 }
                 const req = new XMLHttpRequest();

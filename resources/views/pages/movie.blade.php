@@ -46,16 +46,16 @@
                     <img id="wishlist_movieimage" src="{{ $movie->movie_image->image }}" alt="{{ $movie->title }}">
                     <div class="movie-btn">
                         <div class="btn-transform transform-vertical red">
-                            <div><a href="#" class="item item-1 redbtn"> <i class="ion-play"></i> Xem ngay</a>
+                            <div><a href="{{ url('xem-phim/' . $movie->slug . '/tap-' . $episode_first->episode . '/server-' . $episode_first->server_id) }}" class="item item-1 redbtn"> <i class="ion-play"></i> Xem ngay</a>
                             </div>
                             <div><a href="{{ url('xem-phim/' . $movie->slug . '/tap-' . $episode_first->episode . '/server-' . $episode_first->server_id) }}"
                                     class="item item-2 redbtn fancybox-media hvr-grow"><i class="ion-play"></i>{{ $movie->title }}</a>
                             </div>
                         </div>
                         <div class="btn-transform transform-vertical">
-                            <div><a href="#" class="item item-1 yellowbtn"> <i class="ion-card"></i> xem trailer</a>
+                            <div><a href="https://www.youtube.com/embed/{{ $movie->movie_trailer->trailer }}" class="item item-1 yellowbtn"> <i class="ion-card"></i> xem trailer</a>
                             </div>
-                            <div><a href="#" class="item item-2 yellowbtn"><i class="ion-card"></i></a></div>
+                            <div><a href="https://www.youtube.com/embed/{{ $movie->movie_trailer->trailer }}" class="item item-2 yellowbtn fancybox-media hvr-grow" ><i class="ion-card"></i></a></div>
                         </div>
                     </div>
                 </div>
@@ -64,7 +64,20 @@
                 <div class="movie-single-ct main-content">
                     <h1 class="bd-hd">{{ $movie->title }} <span> {{ $movie->year }} </span></h1>
                     <div class="social-btn">
-                        <a id="{{ $movie->id }}" onclick="add_wishlist(this.id);" href="#" class="parent-btn"><i class="ion-heart"></i> Yêu thích</a>
+                        <style>
+                            .heart:hover{
+                                background-color: #dd003f;
+                                color: white;
+                            }
+                            .active-heart{
+                                background-color: #dd003f;
+                                color: white;
+                            }
+                        </style>
+
+                        <div class="wishlist">
+                        <a href="javacript:void(0)" id="{{ $movie->id }}" onclick="add_wishlist(this.id);" class="parent-btn"><i class="ion-heart heart"></i> Yêu thích</a>
+                        </div>
                         <div class="hover-bnt">
                             <a href="#" class="parent-btn"><i class="ion-android-share-alt"></i>Chia sẻ</a>
                             <div class="hvr-item">
@@ -346,8 +359,65 @@
         var name = document.getElementById('witshlist_moviename').value;
         var slug = document.getElementById('witshlist_movieslug').value;
         var img = document.getElementById('wishlist_movieimage').src;
+        var mylist = document.getElementById({{ $movie->id }});
         var url = window.location;
 
+        function view() {
+            if (localStorage.getItem('data') != null) {
+                var data = JSON.parse(localStorage.getItem('data'));
+
+                for (i = 0; i < data.length; i++) {
+                    var slugs = data[i].slug;
+
+                    if (slugs === slug) {
+
+                        mylist.remove();
+                        $(".wishlist").append(
+                            '<a href="javacript:void(0)" id="{{ $movie->id }}" onclick="add_wishlist(this.id);" class="parent-btn"><i class="ion-heart active-heart"></i> Yêu thích</a>'
+                        );
+                    }
+                }
+            }
+
+        }
+        view();
+
+        function add_wishlist(clicked_id) {
+            var id = clicked_id;
+            var currentTime = new Date().getTime();
+            var newItem = {
+                'id': id,
+                'name': name,
+                'slug': slug,
+                'url': url,
+                'img': img,
+                'time':currentTime
+            }
+            if (localStorage.getItem('data') == null) {
+                localStorage.setItem('data', '[]');
+            }
+            var old_data = JSON.parse(localStorage.getItem('data'));
+
+            var matches = $.grep(old_data, function(obj) {
+                return obj.id == id;
+
+            })
+            if (matches.length) {
+                return false;
+            } else {
+                old_data.push(newItem);
+            }
+            old_data.sort(function(a, b) {
+                return b.time - a.time;
+            });
+            localStorage.setItem('data', JSON.stringify(old_data));
+            mylist.remove();
+            $(".wishlist").append(
+                '<a href="javacript:void(0)" id="{{ $movie->id }}" onclick="add_wishlist(this.id);" class="parent-btn"><i class="ion-heart active-heart"></i> Yêu thích</a>'
+            );
+
+        }
+        
         function add_recent() {
             var id = {{ $movie->id }};
             var currentTime = new Date().getTime();

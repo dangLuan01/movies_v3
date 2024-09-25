@@ -48,7 +48,7 @@
 
                     </li>
                     <li class="dropdown first">
-                        <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+                        <a href="/my-list" class="btn btn-default dropdown-toggle lv1">
                             Phim yêu thích
                         </a>
 

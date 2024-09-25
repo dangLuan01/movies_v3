@@ -29,24 +29,23 @@
     <title>NEST PHIM | Xem Phim Chill</title>
     @endif
     @if (!isset($movie->slug))
-    <meta name="description"
-        content="Fullhdphim, Phim hay - Xem phim hay nhất, xem phim online miễn phí, phim nhanh, Xem Phim Online, Phim Vietsub, Xem Phim Hay, phim HD , phim hot ,phim mới, phim bom tấn" />
+    <meta name="description" content="nestphim - Xem phim hay nhất, phim mới nhất, phim Việt, phim Hàn, phim Trung, phim Âu Mỹ. Kho phim khổng lồ, chất lượng HD, Vietsub đầy đủ. Truy cập nestphim ngay để thưởng thức!" />
     @else
     <meta name="description"
-        content="Xem Phim {{ $movie->title }} - {{ $movie->name_english }} ({!! $movie->movie_description->description !!})" />
+        content="Xem Phim {{ $movie->title }} tại nestphim ({!! $movie->movie_description->description !!})" />
     @endif
     @if (!isset($movie->slug))
-    <meta name="title" content="FullHDPhim | Xem Phim Chất Lượng Tốt Nhất" />
+    <meta name="title" content="NESTPHIM | Xem Phim Không Quảng Cáo"/>
     @else
-    <meta name="title" content="Phim {{ $movie->title }} [Full HD], {{ $movie->name_english }}" />
+    <meta name="title" content="Phim {{ $movie->title }} trên nestphim, {{ $movie->name_english }}" />
     @endif
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="next" href="" />
     <meta property="og:locale" content="vi_VN" />
     @if (!isset($movie->slug))
-    <meta property="og:title" content="Phim hay 2023 - Xem phim hay nhất" />
+    <meta property="og:title" content="Nestphim nơi Xem phim không quảng cáo" />
     @else
-    <meta property="og:title" content="Phim {{ $movie->title }} [Full HD], {{ $movie->name_english }}" />
+    <meta property="og:title" content="Phim {{ $movie->title }} tại nestphim, {{ $movie->name_english }}" />
     @endif
     <meta property="og:type" content="website" />
     @if (!isset($movie->slug))
@@ -55,13 +54,12 @@
     <meta property="og:url" content="{{ route('homepage') }}/movie/{{ $movie->slug }}" />
     @endif
     @if (!isset($movie->slug))
-    <meta property="og:description"
-        content="Phim hay 2023 - Xem phim hay nhất, phim hay trung quốc, hàn quốc, việt nam, mỹ, hong kong , chiếu rạp" />
+    <meta name="description" content="nestphim - Xem phim online miễn phí chất lượng cao. Hàng ngàn bộ phim hấp dẫn, từ kinh điển đến hiện đại, đều có tại nestphim. Cập nhật phim mới liên tục, không cần đăng ký." />
     @else
     <meta property="og:description"
-        content="Xem Phim {{ $movie->title }} - {{ $movie->name_english }} ({{ $movie->year }})" />
+        content="Xem Phim {{ $movie->title }} - {{ $movie->name_english }} ({{ $movie->year }}) trên nestphim"/>
     @endif
-    <meta property="og:site_name" content="fullhdphim.click" />
+    <meta property="og:site_name" content="nestphim.site" />
     @if (!isset($movie->slug))
     <meta property="og:image" content="" />
     @else
@@ -71,10 +69,10 @@
     <meta property="og:image:height" content="300" />
     @if (!isset($movie->slug))
     <meta name="keywords"
-        content="Phim, xem phim, xem phim online, phim online, xem phim hd, phim vietsub, phim thuyet minh, fullhdphim, fullhdphim.click" />
+        content="nestphim, xem phim online nestphim, phim hay nhất nestphim, phim mới cập nhật nestphim, xem phim miễn phí nestphim, phim chất lượng cao nestphim" />
     @else
     <meta name="keywords"
-        content="xem phim {{ $movie->title }},xem phim {{ $movie->title }} vietsub,xem phim {{ $movie->title }} online,xem phim {{ $movie->title }} bluray,xem phim {{ $movie->title }} hd,xem phim {{ $movie->title }} full hd,xem phim {{ $movie->title }} 1080p,xem phim {{ $movie->title }} vietsub online,xem phim {{ $movie->title }} free,xem phim {{ $movie->title }} miễn ph&#237;,xem online, phim chất lượng, si&#234;u n&#233;t, bluray,fullhd, xem phim {{ $movie->name_english }}" />
+        content="xem phim {{ $movie->title }} nestphim,xem phim {{ $movie->title }} vietsub nestphim,xem phim {{ $movie->title }} online nestphim,xem phim {{ $movie->title }} không quảng cáo nestphim,xem phim {{ $movie->title }} hd nestphim,xem phim {{ $movie->title }} full hd nestphim,xem phim {{ $movie->title }} 1080p nestphim,xem phim {{ $movie->title }} vietsub,xem phim {{ $movie->title }} free,xem phim {{ $movie->title }} miễn ph&#237;,xem online, phim chất lượng, si&#234;u n&#233;t, bluray,nestphim, xem phim {{ $movie->name_english }}" />
     @endif
 
 

@@ -440,15 +440,38 @@ class IndexController extends Controller
         $genre = Genre::where('status', 1)->orderBy('id', 'DESC')->get();
         $country = Country::where('status', 1)->orderBy('id', 'DESC')->get();
         $tag = $tag;
-        $movie = Movie::join('movie_tags', 'movies.id', '=', 'movie_tags.movie_id')->where('tags', 'LIKE', '%' . $tag . '%')->where('status', 1)->with(['episode' => function ($query) {
+        $movie_tag = Movie::join('movie_tags', 'movies.id', '=', 'movie_tags.movie_id')->where('tags', 'LIKE', '%' . $tag . '%')->where('status', 1)->with(['episode' => function ($query) {
             $query->orderBy('episode', 'ASC');
         }])->with(['movie_image' => function ($thumb) {
-            $thumb->where('is_thumbnail', 1);
+            $thumb->where('is_thumbnail', 0);
         }])->orderBy('updated_at', 'DESC')->paginate(20);
+
+        $movie_tag_with_ratings = [];
+
+       
+        $responses = Http::pool(function ($pool) use ($movie_tag) {
+            return $movie_tag->map(function ($movie) use ($pool) {
+                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+            });
+        });
+        foreach ($responses as $key => $response) {
+            if ($response->successful()) {
+                $imdbRating_tag = ($response['Response'] == "True" && $response['imdbRating'] != "N/A")
+                    ? $response['imdbRating']
+                    : "0.0";
+            } else {
+                $imdbRating_tag = "0.0";
+            }
+
+            $movie_tag_with_ratings[] = [
+                'movie' => $movie_tag[$key],
+                'imdbRating' => $imdbRating_tag,
+            ];
+        }
+        
         $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
         $url_update = $api_ophim['pathImage'];
-        //dd($movie);
-        return view('pages.tag', compact('category', 'genre', 'country', 'tag', 'movie', 'url_update'));
+        return view('pages.tag', compact('category', 'genre', 'country', 'tag', 'movie_tag', 'url_update','movie_tag_with_ratings'));
     }
     public function genre($slug)
     {
@@ -562,13 +585,37 @@ class IndexController extends Controller
         foreach ($movie_directors as $key => $movi) {
             $many_directors[] = $movi->movie_id;
         }
-        $movie = Movie::whereIn('id', $many_directors)->where('status', 1)->withCount(['episode' => function ($query) {
+        $movie_directors = Movie::whereIn('id', $many_directors)->where('status', 1)->withCount(['episode' => function ($query) {
             $query->select(DB::raw('count(distinct(episode))'));
         }])->orderBy('updated_at', 'DESC')->paginate(20);
+
+        $movie_directors_with_ratings = [];
+
+       
+        $responses = Http::pool(function ($pool) use ($movie_directors) {
+            return $movie_directors->map(function ($movie) use ($pool) {
+                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+            });
+        });
+        foreach ($responses as $key => $response) {
+            if ($response->successful()) {
+                $imdbRating = ($response['Response'] == "True" && $response['imdbRating'] != "N/A")
+                    ? $response['imdbRating']
+                    : "0.0";
+            } else {
+                $imdbRating = "0.0";
+            }
+
+            $movie_directors_with_ratings[] = [
+                'movie' => $movie_directors[$key],
+                'imdbRating' => $imdbRating,
+            ];
+        }
+
         $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
         $url_update = $api_ophim['pathImage'];
         //dd($many_genre);
-        return view('pages.directors', compact('category', 'genre', 'country', 'directors_slug', 'movie', 'url_update'));
+        return view('pages.directors', compact('category', 'genre', 'country', 'directors_slug', 'movie_directors', 'url_update','movie_directors_with_ratings'));
     }
     public function cast($slug)
     {
@@ -585,13 +632,35 @@ class IndexController extends Controller
         foreach ($movie_cast as $key => $movi) {
             $many_cast[] = $movi->movie_id;
         }
-        $movie = Movie::whereIn('id', $many_cast)->where('status', 1)->withCount(['episode' => function ($query) {
+        $movies_cast = Movie::whereIn('id', $many_cast)->where('status', 1)->withCount(['episode' => function ($query) {
             $query->select(DB::raw('count(distinct(episode))'));
         }])->orderBy('updated_at', 'DESC')->paginate(20);
+
+        $movie_cate_with_ratings = [];
+
+        $responses = Http::pool(function ($pool) use ($movies_cast) {
+            return $movies_cast->map(function ($movie) use ($pool) {
+                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+            });
+        });
+        foreach ($responses as $key => $response) {
+            if ($response->successful()) {
+                $imdbRating = ($response['Response'] == "True" && $response['imdbRating'] != "N/A")
+                    ? $response['imdbRating']
+                    : "0.0";
+            } else {
+                $imdbRating = "0.0";
+            }
+
+            $movie_cate_with_ratings[] = [
+                'movie' => $movies_cast[$key],
+                'imdbRating' => $imdbRating,
+            ];
+        }
         $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
         $url_update = $api_ophim['pathImage'];
-        //dd($many_genre);
-        return view('pages.cast', compact('category', 'genre', 'country', 'cast_slug', 'movie', 'url_update'));
+
+        return view('pages.cast', compact('category', 'genre', 'country', 'cast_slug', 'movies_cast', 'url_update','movie_cate_with_ratings'));
     }
     public function movie(Request $request, $slug)
     {

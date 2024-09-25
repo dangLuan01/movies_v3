@@ -29,13 +29,14 @@
     <title>NEST PHIM | Xem Phim Chill</title>
     @endif
     @if (!isset($movie->slug))
-    <meta name="description" content="nestphim - Xem phim hay nhất, phim mới nhất, phim Việt, phim Hàn, phim Trung, phim Âu Mỹ. Kho phim khổng lồ, chất lượng HD, Vietsub đầy đủ. Truy cập nestphim ngay để thưởng thức!" />
+    <meta name="description"
+        content="nestphim - Xem phim hay nhất, phim mới nhất, phim Việt, phim Hàn, phim Trung, phim Âu Mỹ. Kho phim khổng lồ, chất lượng HD, Vietsub đầy đủ. Truy cập nestphim ngay để thưởng thức!" />
     @else
     <meta name="description"
         content="Xem Phim {{ $movie->title }} tại nestphim ({!! $movie->movie_description->description !!})" />
     @endif
     @if (!isset($movie->slug))
-    <meta name="title" content="NESTPHIM | Xem Phim Không Quảng Cáo"/>
+    <meta name="title" content="NESTPHIM | Xem Phim Không Quảng Cáo" />
     @else
     <meta name="title" content="Phim {{ $movie->title }} trên nestphim, {{ $movie->name_english }}" />
     @endif
@@ -54,10 +55,11 @@
     <meta property="og:url" content="{{ route('homepage') }}/movie/{{ $movie->slug }}" />
     @endif
     @if (!isset($movie->slug))
-    <meta name="description" content="nestphim - Xem phim online miễn phí chất lượng cao. Hàng ngàn bộ phim hấp dẫn, từ kinh điển đến hiện đại, đều có tại nestphim. Cập nhật phim mới liên tục, không cần đăng ký." />
+    <meta name="description"
+        content="nestphim - Xem phim online miễn phí chất lượng cao. Hàng ngàn bộ phim hấp dẫn, từ kinh điển đến hiện đại, đều có tại nestphim. Cập nhật phim mới liên tục, không cần đăng ký." />
     @else
     <meta property="og:description"
-        content="Xem Phim {{ $movie->title }} - {{ $movie->name_english }} ({{ $movie->year }}) trên nestphim"/>
+        content="Xem Phim {{ $movie->title }} - {{ $movie->name_english }} ({{ $movie->year }}) trên nestphim" />
     @endif
     <meta property="og:site_name" content="nestphim.site" />
     @if (!isset($movie->slug))
@@ -85,7 +87,7 @@
     <!-- CSS files -->
     <link rel="stylesheet" href="{{ asset('css/plugins.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.min.js"></script>
 </head>
 
 <body>
@@ -112,6 +114,7 @@
     <script src="{{ asset('js/plugins.js') }}"></script>
     <script src="{{ asset('js/plugins2.js') }}"></script>
     <script src="{{ asset('js/custom.js') }}"></script>
+
     <script type='text/javascript'>
         $(document).ready(function() {
             $('#timkiem').keyup(function() {

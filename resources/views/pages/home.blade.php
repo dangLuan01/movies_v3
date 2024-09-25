@@ -81,7 +81,7 @@
                                                         class="ion-android-arrow-dropright"></i> </a>
                                             </div>
                                             <div class="title-in">
-                                                <h6><a href="#">{{ $movie['movie']->title }}</a></h6>
+                                                <h6><a href="{{ route('movie', $movie['movie']->slug) }}">{{ $movie['movie']->title }}</a></h6>
                                                 <p><i class="ion-android-star"></i><span>
                                                   </span>{{ $movie['imdbRating'] }} /10</p>
                                             </div>
@@ -113,7 +113,7 @@
                                                         class="ion-android-arrow-dropright"></i> </a>
                                             </div>
                                             <div class="title-in">
-                                                <h6><a href="#">{{ $movie->title }}</a></h6>
+                                                <h6><a href="{{ route('movie', $movie->slug) }}">{{ $movie->title }}</a></h6>
                                                 
                                             </div>
                                         </div>
@@ -146,7 +146,7 @@
                                                         class="ion-android-arrow-dropright"></i> </a>
                                             </div>
                                             <div class="title-in">
-                                                <h6><a href="#">{{ $movie['movie']->title }}</a></h6>
+                                                <h6><a href="{{ route('movie', $movie['movie']->slug) }}">{{ $movie['movie']->title }}</a></h6>
                                                 <p><i class="ion-android-star"></i><span>
                                                     </span> {{ $movie['imdbRating'] }} /10</p>
                                             </div>
@@ -193,7 +193,7 @@
                                                         class="ion-android-arrow-dropright"></i> </a>
                                             </div>
                                             <div class="title-in">
-                                                <h6><a href="#">{{ $movie['movie']->title }}</a></h6>
+                                                <h6><a href="{{ route('movie', $movie['movie']->slug) }}">{{ $movie['movie']->title }}</a></h6>
                                                 <p><i class="ion-android-star"></i><span>
                                                   </span>{{ $movie['imdbRating'] }} /10</p>
                                             </div>
@@ -238,7 +238,7 @@
                                                         class="ion-android-arrow-dropright"></i> </a>
                                             </div>
                                             <div class="title-in">
-                                                <h6><a href="#">{{ $movie['movie']->title }}</a></h6>
+                                                <h6><a href="{{ route('movie', $movie['movie']->slug) }}">{{ $movie['movie']->title }}</a></h6>
                                                 <p><i class="ion-android-star"></i><span>
                                                   {{ $movie['imdbRating'] }}
                                                 </span> /10</p>
@@ -284,7 +284,7 @@
                             $image = substr($movie['movie']->movie_image->image, $startPos + strlen('movies/')); @endphp
                             @if ($image_check == 'https') {{ $url_update . $image }}
                                 @else
-                                   {{ asset('uploads/movie/' . $movie['movie']->movie_image->image) }} @endif" alt="photo by Barn Images" width="4096" height="2737">
+                                   {{ asset('uploads/movie/' . $movie['movie']->movie_image->image) }} @endif" alt="photo by Barn Images" width="4096" height="2737" loading="lazy">
                         </div>
                         <div class="trailer-infor">
                             <h4 class="desc">{{ $movie['movie']->title }}</h4>
@@ -309,9 +309,9 @@
                             $image = substr($movie->image, $startPos + strlen('movies/')); @endphp
                             @if ($image_check == 'https') {{ $url_update . $image }}
                                 @else
-                                   {{ asset('uploads/movie/' . $movie->image) }} @endif" alt="{{ $movie->title }}" width="70" height="70"></a>
+                                   {{ asset('uploads/movie/' . $movie->image) }} @endif" alt="{{ $movie->title }}" width="70" height="70" loading="lazy"></a>
                         <div class="celeb-author">
-                            <h6><a href="#">{{ $movie->title }}</a></h6>
+                            <h6><a href="{{ route('movie', $movie->slug) }}">{{ $movie->title }}</a></h6>
                             <span>{{ $movie->count_views }} </span><p>lượt xem</p>
                         </div>
                     </div>
@@ -357,7 +357,7 @@
                                                         class="ion-android-arrow-dropright"></i> </a>
                                             </div>
                                             <div class="title-in">
-                                                <h6><a href="#">{{ $movie['movie']->title }}</a></h6>
+                                                <h6><a href="{{ route('movie', $movie['movie']->slug) }}">{{ $movie['movie']->title }}</a></h6>
                                                 <p><i class="ion-android-star"></i><span>
                                                    </span>{{ $movie['imdbRating'] }} /10</p>
                                             </div>
@@ -388,21 +388,21 @@
                                     <div class="slide-it">
                                         <div class="movie-item">
                                             <div class="mv-img">
-                                                <img src="                    @php
+                                                <img src="@php
                                                 $image_check = substr($movie['movie']->movie_image->image, 0, 5);
                                                 $startPos = strpos($movie['movie']->movie_image->image, 'movies/');
                                                 $image = substr($movie['movie']->movie_image->image, $startPos + strlen('movies/')); @endphp
                                                 @if ($image_check == 'https') {{ $url_update . $image }}
                                                     @else
-                                                       {{ asset('uploads/movie/' . $movie['movie']->movie_image->image) }} @endif"
-                                                    alt="{{ $movie['movie']->title }}" width="190" height="284" style="width: 190px; height:230px;" loading="lazy">
+                                                       {{ asset('uploads/movie/' . $movie['movie']->movie_image->image) }} @endif" 
+                                                loading="lazy" alt="{{ $movie['movie']->title }}" width="190" height="284" style="width: 190px; height:230px;">
                                             </div>
                                             <div class="hvr-inner">
                                                 <a href="{{ route('movie',$movie['movie']->slug) }}"> Xem <i
                                                         class="ion-android-arrow-dropright"></i> </a>
                                             </div>
                                             <div class="title-in">
-                                                <h6><a href="#">{{ $movie['movie']->title }}</a></h6>
+                                                <h6><a href="{{ route('movie', $movie['movie']->slug) }}">{{ $movie['movie']->title }}</a></h6>
                                                 <p><i class="ion-android-star"></i><span>
                                                   </span>{{ $movie['imdbRating'] }} /10</p>
                                             </div>

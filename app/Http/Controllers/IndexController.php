@@ -843,13 +843,13 @@ class IndexController extends Controller
     public function locphim()
     {
         //get
-        $sort = $_GET['order'];
+        $name_get = $_GET['movie'];
         $category_get = $_GET['category'];
         $genre_get = $_GET['genre'];
         $country_get = $_GET['country'];
         $year_get = $_GET['year'];
 
-        if ($sort == "" && $category_get == "" && $genre_get == "" && $country_get == "" && $year_get == "") {
+        if ($name_get == "" && $category_get == "" && $genre_get == [''] && $country_get == "" && $year_get == "") {
 
             return redirect()->back();
         } else {
@@ -859,9 +859,12 @@ class IndexController extends Controller
             $movie_array = Movie::withCount(['episode' => function ($query) {
                 $query->select(DB::raw('count(distinct(episode))'));
             }])->with(['movie_image' => function ($thumb) {
-                $thumb->where('is_thumbnail', 1);
+                $thumb->where('is_thumbnail', 0);
             }])->where('status', 1);
 
+            if($name_get) {
+                $movie_array = $movie_array->whereRaw("MATCH(title) AGAINST(? IN BOOLEAN MODE)", [$name_get]);
+            }
             if ($category_get) {
                 $movie_array = $movie_array->where('category_id', $category_get);
             }
@@ -871,19 +874,16 @@ class IndexController extends Controller
             if ($year_get) {
                 $movie_array = $movie_array->where('year', $year_get);
             }
-            if ($sort == 'count_views') {
-                // $movie_array = $movie_array->join('movie_views', 'movies.id', '=', 'movie_views.movie_id')->orderBy($sort, 'DESC');
-            }
-            if ($sort == 'created_at') {
-                $movie_array = $movie_array->orderBy('created_at', 'DESC');
-            }
-            if ($sort == 'title') {
-                $movie_array = $movie_array->orderBy('title', 'ASC');
-            }
 
-            if ($genre_get) {
-                $gen_slug = Genre::where('id', $genre_get)->first();
-                $movie_genre = Movie_Genre::where('genre_id', $gen_slug->id)->get();
+            if ($genre_get != ['']) {
+               
+                $gen_slug = Genre::whereIn('slug', $genre_get)->get();
+                $gen_slug_arr=[];
+                foreach ($gen_slug as $key => $gen_arr) {
+                    $gen_slug_arr[] = $gen_arr->id;
+                }
+                $movie_genre = Movie_Genre::whereIn('genre_id', $gen_slug_arr)->get();
+
                 $many_genre = [];
                 foreach ($movie_genre as $key => $movi) {
                     $many_genre[] = $movi->movie_id;
@@ -892,20 +892,33 @@ class IndexController extends Controller
             }
 
 
-            // $movie_array = $movie_array->with('movie_genre');
+            $movie_filter = $movie_array->paginate(20);
+            $movie_filter_with_ratings = [];
 
-            // $movie = array();
-            // foreach ($movie_array as $mov) {
-            //     dd($mov);
-            //     foreach ($mov->movie_genre as $mov_gen) {
-            //         $movie = $movie_array->whereIn('genre_id', [$mov_gen->genre_id]);
-            //     }
-            // }
+            $responses = Http::pool(function ($pool) use ($movie_filter) {
+                return $movie_filter->map(function ($movie) use ($pool) {
+                    return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+                });
+            });
+            foreach ($responses as $key => $response) {
+                if ($response->successful()) {
+                    $imdbRating = ($response['Response'] == "True" && $response['imdbRating'] != "N/A")
+                        ? $response['imdbRating']
+                        : "0.0";
+                } else {
+                    $imdbRating = "0.0";
+                }
+    
+                $movie_filter_with_ratings[] = [
+                    'movie' => $movie_filter[$key],
+                    'imdbRating' => $imdbRating,
+                ];
+            }
 
-            $movie = $movie_array->paginate(20);
+
             $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
             $url_update = $api_ophim['pathImage'];
-            return view('pages.locphim', compact('category', 'genre', 'country', 'movie', 'url_update'));
+            return view('pages.locphim', compact('category', 'genre', 'country', 'movie_filter', 'url_update','movie_filter_with_ratings'));
         }
     }
     public function my_list()

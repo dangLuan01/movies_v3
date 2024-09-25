@@ -51,61 +51,7 @@
                     {{ $movie_directors->links('vendor.pagination.custom') }}
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-12 col-xs-12">
-                    <div class="sidebar">
-                        <div class="searh-form">
-                            <h4 class="sb-title">Tìm kiếm</h4>
-                            <form class="form-style-1" action="#">
-                                <div class="row">
-                                    <div class="col-md-12 form-it">
-                                        <label>Tên phim</label>
-                                        <input type="text" placeholder="Nhập tên phim">
-                                    </div>
-                                    <div class="col-md-12 form-it">
-                                        <label>Thể loại</label>
-                                        <div class="group-ip">
-                                            <select name="skills" multiple="" class="ui fluid dropdown">
-											<option value="">Chọn thể loại</option>
-                                            @foreach($genre as $gen)
-                                            <option value="{{ $gen->slug }}">{{ $gen->title }}</option>
-                                            @endforeach
-											
-										</select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 form-it">
-                                        <label>Quốc gia</label>
-                                        <div class="group-ip">
-                                            <select name="skills" multiple="" class="ui fluid dropdown">
-											<option value="">Chọn thể loại</option>
-                                            @foreach($country as $coun)
-                                            <option value="{{ $coun->slug }}">{{ $coun->title }}</option>
-                                            @endforeach
-											
-										</select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 form-it">
-                                        <label>Năm</label>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <select>
-											  <option value="number">2024</option>
-                                              <option value="number">2023</option>
-											</select>
-                                            </div>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 ">
-                                        <input class="submit" type="submit" value="submit">
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                       
-                    </div>
-                </div>
+                @include('pages.include.filter_movie')
             </div>
         </div>
     </div>

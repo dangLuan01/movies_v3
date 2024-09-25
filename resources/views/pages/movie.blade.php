@@ -220,6 +220,10 @@
                                                 <h6>Thời lượng:</h6>
                                                 <p>{{ $times }}</p>
                                             </div>
+                                            <div class="sb-it">
+                                                <h6>Quốc gia:</h6>
+                                                <p>{{ $movie->country->title }}</p>
+                                            </div>
                                             
                                             <div class="sb-it">
                                                 <h6>Từ khóa:</h6>

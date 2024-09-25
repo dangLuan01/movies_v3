@@ -711,20 +711,7 @@ class IndexController extends Controller
         //$country = Country::where('status', 1)->orderBy('id', 'DESC')->get();
         $movie = Movie::with('category', 'genre', 'country', 'episode')->where('slug', $slug)->where('status', 1)->first();
         
-        foreach($movie->movie_genre->take(2) as $gen){
-            $genre[]=$gen->title;
-        }
-        $thumbnail = Movie::select('id')->with(['movie_image' => function ($thumb) {
-            $thumb->where('is_thumbnail', 1);
-        }])->where('slug', $slug)->first();
         
-        $minutes = $movie->time;
-        if (floor($minutes / 60) == 0) {
-            $times = ($minutes - floor($minutes / 60) * 60) . 'm';
-        } elseif (($minutes - floor($minutes / 60) * 60) == 0) {
-            $times = floor($minutes / 60) . 'h';
-        } else
-            $times = floor($minutes / 60) . 'h ' . ($minutes - floor($minutes / 60) * 60) . 'm';
         //save views movie for day
         $day = Carbon::today('Asia/Ho_Chi_Minh')->subDays(0)->startOfDay();
 
@@ -763,30 +750,15 @@ class IndexController extends Controller
             }
 
             $server = Server::orderby('id', 'DESC')->get();
-            // $views = Movie::select('title', DB::raw('SUM(count_views) as count_views'))->groupBy('title')->join('movie_views', 'movies.id', '=', 'movie_views.movie_id')
-            //     ->where('movies.id', $movie->id)->orderBy('count_views', 'DESC')->first();
 
             $episode_movie = Episode::where('movie_id', $movie->id)->get()->unique('server_id');
             $query = "CAST(episode AS SIGNED INTEGER) ASC";
             $episode_list = Episode::where('movie_id', $movie->id)->orderByRaw($query)->get();
 
-            $api_imdb = Http::get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=2233412b');
-            
-            if ($api_imdb->status() == 200) {
-                if ($api_imdb['Response'] == "True" && $api_imdb['imdbRating'] != "N/A") {
-                    $values = $api_imdb['imdbRating'] . ' /10';
-                } elseif ($api_imdb['Response'] == "False") {
-                    $values = "N/A";
-                } elseif ($api_imdb['Response'] == "True") {
-                    $values = $api_imdb['imdbRating'];
-                }
-            } else
-                return $values = "N/A";
             $episode_current_list = Episode::with('movie')->where('movie_id', $movie->id)->get()->unique('episode');
             $episode_current_list_count = $episode_current_list->count();
-            $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
-            $url_update = $api_ophim['pathImage'];
-            return view('pages.watch', compact('category', 'movie', 'related', 'tapphim', 'server', 'episode_movie', 'episode_list', 'server_active', 'times', 'values', 'episode_current_list_count', 'url_update','genre','thumbnail'));
+           
+            return view('pages.watch', compact('category', 'movie', 'related', 'tapphim', 'server', 'episode_movie', 'episode_list', 'server_active', 'episode_current_list_count'));
         } catch (ModelNotFoundException $th) {
             return redirect()->back();
         }
@@ -801,7 +773,6 @@ class IndexController extends Controller
     //loc phim
     public function locphim()
     {
-
         //get
         $sort = $_GET['order'];
         $category_get = $_GET['category'];
@@ -871,18 +842,12 @@ class IndexController extends Controller
     public function my_list()
     {
         $category = Category::orderBy('id', 'ASC')->where('status', 1)->get();
-        // $genre = Genre::where('status', 1)->orderBy('id', 'DESC')->get();
-        // $country = Country::where('status', 1)->orderBy('id', 'DESC')->get();
-
 
         return view('pages.my_list', compact('category'));
     }
     public function recent()
     {
         $category = Category::orderBy('id', 'ASC')->where('status', 1)->get();
-        // $genre = Genre::where('status', 1)->orderBy('id', 'DESC')->get();
-        // $country = Country::where('status', 1)->orderBy('id', 'DESC')->get();
-
 
         return view('pages.my_recent', compact('category'));
     }

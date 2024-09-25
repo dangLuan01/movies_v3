@@ -68,7 +68,7 @@
             </select>
             <input id="timkiem" type="text" placeholder="Tìm kiếm phim cho bạn">
         </div>
-        <div class="top-search">
+        
             <style>
                 #result {
                     display: flex;
@@ -114,7 +114,7 @@
             <div id="result" class="top-search__list" style="display: block;">
 
             </div>
-        </div>
+        
     </div>
 </header>
 <!-- END | Header -->

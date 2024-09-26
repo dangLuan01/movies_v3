@@ -3,13 +3,13 @@
 
 <head>
     <!-- Basic need -->
-    <title>NEST PHIM</title>
+    
     <meta charset="UTF-8">
-    <meta name="description" content="">
-    <meta name="keywords" content="">
-    <meta name="author" content="">
+    <meta name="description" content="xem phim trên nestphim không quảng cáo">
+    <meta name="keywords" content="nestphim.site,xem phim nestphim, nestphim không quảng cáo, nestphim free,motchill,phimmoi,phimmoiandchill">
+    <meta name="author" content="nestphim">
     <link rel="profile" href="#">
-
+    <link href="{{ asset('uploads/logo/pngwing1.com.png') }}" rel="icon" type="image/x-icon">
     <!--Google Font-->
     <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600' />
     <!-- Mobile specific meta -->
@@ -26,7 +26,7 @@
         {{ $movie->title }} - NEST PHIM
     </title>
     @else
-    <title>NEST PHIM | Xem Phim Chill</title>
+    <title>NEST PHIM | Xem Phim Chill Không Quảng Cáo</title>
     @endif
     @if (!isset($movie->slug))
     <meta name="description"
@@ -87,13 +87,12 @@
     <!-- CSS files -->
     <link rel="stylesheet" href="{{ asset('css/plugins.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.min.js"></script>
 </head>
 
 <body>
     <!--preloading-->
     <div id="preloader">
-        <img class="logo" src="{{ asset('images/logo1.png') }}" alt="" width="119" height="58">
+        {{-- <img class="logo" src="" alt="" width="119" height="58"> --}}
         <div id="status">
             <span></span>
             <span></span>

@@ -2,51 +2,51 @@
     <div class="container">
         <div class="flex-parent-ft">
             <div class="flex-child-ft item1">
-                <a href="index.html"><img class="logo" src="images/logo1.png" alt=""></a>
-                <p>5th Avenue st, manhattan<br> New York, NY 10001</p>
-                <p>Call us: <a href="#">(+01) 202 342 6789</a></p>
+                <a href="/"><img class="logo" src="{{ asset('uploads/logo/logo-nesphim.png') }}" width="230" height="50" alt=""></a>
+                <p>#nestphim,#chillphim,#motphim<br> Xem phim không quảng cáo</p>
+                
             </div>
             <div class="flex-child-ft item2">
-                <h4>Resources</h4>
+                <h4>Từ khóa</h4>
                 <ul>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Blockbuster</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                    <li><a href="#">Forums</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Nestphim</a></li>
+                    <li><a href="#">Phimchill</a></li>
+                    <li><a href="#">Motchill</a></li>
+                    <li><a href="#">Phimmoichill</a></li>
+                    <li><a href="#">Nestphimchill</a></li>
+                    <li><a href="#">Chillphimnest</a></li>
                 </ul>
             </div>
             <div class="flex-child-ft item3">
-                <h4>Legal</h4>
+                <h4>Nestphim</h4>
                 <ul>
-                    <li><a href="#">Terms of Use</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Security</a></li>
+                    <li><a href="#">Điều khoản</a></li>
+                    <li><a href="#">Chính sách</a></li>
+                    <li><a href="#">Méo an toàn</a></li>
                 </ul>
             </div>
             <div class="flex-child-ft item4">
-                <h4>Account</h4>
+                <h4>Hello World</h4>
                 <ul>
-                    <li><a href="#">My Account</a></li>
-                    <li><a href="#">Watchlist</a></li>
-                    <li><a href="#">Collections</a></li>
-                    <li><a href="#">User Guide</a></li>
+                    <li><a href="#">#nestphim.site</a></li>
+                    <li><a href="#">#nestphim.vn</a></li>
+                    <li><a href="#">#nestphim.org</a></li>
+                    <li><a href="#">#nestphim.xxx</a></li>
                 </ul>
             </div>
             <div class="flex-child-ft item5">
-                <h4>Newsletter</h4>
-                <p>Subscribe to our newsletter system now <br> to get latest news from us.</p>
+                <h4>Yâu cầu phim</h4>
+                <p>Để lại tên phim mà bạn muốn xem nhé 3==D--</p>
                 <form action="#">
-                    <input type="text" placeholder="Enter your email...">
+                    <input type="text" placeholder="Tên phim yêu cầu...">
                 </form>
-                <a href="#" class="btn">Subscribe now <i class="ion-ios-arrow-forward"></i></a>
+                <a href="/" class="btn">Xem phim ngay<i class="ion-ios-arrow-forward"></i></a>
             </div>
         </div>
     </div>
     <div class="ft-copyright">
         <div class="ft-left">
-            <p>© 1999 Nestphim. All Rights Reserved. Designed by nestphim.</p>
+            <p>© 6969 Nestphim. Thực hiện bởi nestphim.</p>
         </div>
         <div class="backtotop">
             <p><a href="#" id="back-to-top">Back to top <i class="ion-ios-arrow-thin-up"></i></a></p>

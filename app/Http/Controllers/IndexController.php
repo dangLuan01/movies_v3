@@ -63,15 +63,12 @@ class IndexController extends Controller
     }
     public function home()
     {
-        $category = Cache::remember('categories', 300, function () {
+        $category = Cache::remember('categories', 3600, function () {
                 return Category::orderBy('id', 'ASC')->where('status', 1)->get();
-        });
-        $genre = Cache::remember('genres', 300, function () {
-                return Genre::where('status', 1)->orderBy('id', 'DESC')->get();
         });
         
         // Cache cho danh sách quốc gia 
-        $country_ids = Cache::remember('country_ids', 500, function () {
+        $country_ids = Cache::remember('country_ids', 600, function () {
             return Country::whereIn('title', ['Au My', 'Phap', 'Anh', 'Y', 'Duc'])->pluck('id');
         });
 
@@ -109,7 +106,7 @@ class IndexController extends Controller
                 'imdbRating' => $imdbRating_hot,
             ];
         }
-      
+        
         // TOP VIEW MOVIES
         $topview = Cache::remember('topview', 300, function () {
             return Movie::select('title', 'slug', 'image', DB::raw('SUM(count_views) as count_views'))
@@ -366,7 +363,7 @@ class IndexController extends Controller
         $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
         $url_update = $api_ophim['pathImage'];
         
-        return view('pages.home', compact('category', 'genre', 'hot_with_ratings',  'movie_animation_with_ratings', 'movie_us_with_ratings', 'tv_series_with_ratings', 'movie_horror_with_ratings', 'url_update','movie_oscar_with_ratings','movie_netflix_with_ratings','movie_us_coming','topview'));
+        return view('pages.home', compact('category', 'hot_with_ratings',  'movie_animation_with_ratings', 'movie_us_with_ratings', 'tv_series_with_ratings', 'movie_horror_with_ratings', 'url_update','movie_oscar_with_ratings','movie_netflix_with_ratings','movie_us_coming','topview'));
     }
     public function category($slug)
     {

@@ -12,7 +12,7 @@
                         <span></span>
                     </div>
                 </div>
-                <a href="/"><img class="logo" src="{{ asset('images/logo1.png') }}" alt="" width="119" height="58"></a>
+                <a href="/"><img class="logo" src="{{ asset('uploads/logo/'.$info->logo) }}" alt="" width="250" height="100"></a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">

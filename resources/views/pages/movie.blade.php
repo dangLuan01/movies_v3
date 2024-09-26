@@ -123,47 +123,15 @@
                                         <div class="col-md-8 col-sm-12 col-xs-12">
                                             <p>{!! $movie->movie_description->description !!}</p>
                                             
-                                            
-                                            <div class="mvsingle-item ov-item">
-                                                <a class="img-lightbox" data-fancybox-group="gallery"
-                                                    href="images/uploads/image41.jpg"><img
-                                                        src="images/uploads/image4.jpg" alt=""></a>
-                                                <a class="img-lightbox" data-fancybox-group="gallery"
-                                                    href="images/uploads/image51.jpg"><img
-                                                        src="images/uploads/image5.jpg" alt=""></a>
-                                                <a class="img-lightbox" data-fancybox-group="gallery"
-                                                    href="images/uploads/image61.jpg"><img
-                                                        src="images/uploads/image6.jpg" alt=""></a>
-                                                <div class="vd-it">
-                                                    <img class="vd-img" src="images/uploads/image7.jpg" alt="">
-                                                    <a class="fancybox-media hvr-grow"
-                                                        href="https://www.youtube.com/embed/o-0hcF97wy0"><img
-                                                            src="images/uploads/play-vd.png" alt=""></a>
-                                                </div>
-                                            </div>
                                             <div class="title-hd-sm">
-                                                <h4>Diển viên</h4>
+                                                <h4>Diễn viên</h4>
                                                 
                                             </div>
                                             <!-- movie cast -->
-                                            <div class="mvcast-item">
-                                                @if (count($movie->movie_cast) == 0)
-                                            @else
-                                            @foreach ($movie->movie_cast as $cast)
-                                            <div class="cast-it">
-                                                <div class="cast-left">
-                                                    <h4>JW</h4>
-                                                    <a href="{{ route('cast', $cast->slug) }}">{{ $cast->title }}</a>
-                                                </div> 
+                                            <div class="mvcast-item cast">
+
                                             </div>
-                                            @if (!$loop->last)
-                                            ,
-                                            @endif
-                                            @endforeach
-                                            @endif
-                                            </div>
-                                            
-                                           
+                                                                                       
                                         </div>
                                         <div class="col-md-4 col-xs-12 col-sm-12">
                                             <div class="sb-it">
@@ -253,45 +221,18 @@
                                         <h2>{{ $movie->title }}</h2>
                                         <!-- //== -->
                                         <div class="title-hd-sm">
-                                            <h4>Đạo diễn</h4>
+                                            <h4>Đạo diễn & Sản xuất</h4>
                                         </div>
-                                        <div class="mvcast-item">  
-                                            @if (count($movie->movie_directors) == 0)
-                                            @else
-                                            @foreach ($movie->movie_directors as $direc)
-                                            <div class="cast-it">
-                                                <div class="cast-left">
-                                                    <h4>JW</h4>
-                                                    <a href="{{ route('directors', $direc->slug) }}">{{ $direc->name }}</a>
-                                                </div>
-                                                <p>... Director</p>
-                                            </div>
-                                            @if (!$loop->last)
-                                            ,
-                                            @endif
-                                            @endforeach
-                                            @endif
+                                        <div class="mvcast-item crew">
+                                            
                                         </div>
                                         
                                         <div class="title-hd-sm">
                                             <h4>Diễn viên</h4>
                                         </div>
-                                        <div class="mvcast-item">
+                                        <div class="mvcast-item cast">
                                             
-                                            @if (count($movie->movie_cast) == 0)
-                                            @else
-                                            @foreach ($movie->movie_cast as $cast)
-                                            <div class="cast-it">
-                                                <div class="cast-left">
-                                                    <h4>JW</h4>
-                                                    <a href="{{ route('cast', $cast->slug) }}">{{ $cast->title }}</a>
-                                                </div> 
-                                            </div>
-                                            @if (!$loop->last)
-                                            ,
-                                            @endif
-                                            @endforeach
-                                            @endif
+                                           
                                         </div>
                                        
                                     </div>
@@ -459,5 +400,100 @@
         }
         add_recent();
 </script>
+<script>
+        const key ="Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMmViYzQ1NzAyODhlY2QyZDNkZDA3NWQ0YzdkNTRhMSIsIm5iZiI6MTcyNzMxNjk2MS4wOTYwNDgsInN1YiI6IjY2MWI0YjVlNGU0ZGZmMDE5ZDAzN2RkMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.tfm-5-BNTHcfuo4wR4LK6FYr2cSCmEiqw_kj9JCDUXk";
+        var url = "https://api.themoviedb.org";
+        var url_image = "https://media.themoviedb.org";
+        function movieListener() {
+        // Parse JSON response
+        const responseArray = JSON.parse(this.responseText);
+    
+        if (responseArray['tv_results'].length === 0) {
+           
+            responseArray['movie_results'].forEach(item_movie => {
+            const id_movie = item_movie.id
+            function castListener() {
+                const responseCastArray = JSON.parse(this.responseText);
+                responseCastArray['cast'].forEach(item_cast =>{
+                    const img_cast = url_image + '/t/p/w138_and_h175_face/'+item_cast.profile_path;
+                    $(".cast").append(`
+                    <div class="cast-it">
+                        <div class="cast-left">
+                            <img src="${img_cast}" alt="">
+                             <a href="#">${item_cast.name}</a>
+                        </div>
+                        <p>${item_cast.character}</p>
+                    </div>
+                    `);
+                });
+                responseCastArray['crew'].forEach(item_crew =>{
+                    const img_crew = url_image + '/t/p/w138_and_h175_face/'+item_crew.profile_path;
+                    $(".crew").append(`
+                    <div class="cast-it">
+                        <div class="cast-left">
+                            <img src="${img_crew}" alt="">
+                             <a href="#">${item_crew.name}</a>
+                        </div>
+                        <p>${item_crew.department}</p>
+                    </div>
+                    `);
+                })
+            }
+            const cast = new XMLHttpRequest();
+            cast.addEventListener("load", castListener);
+            cast.open("GET", url+"/3/movie/"+id_movie+"/credits");
+            cast.setRequestHeader("Authorization", key);
+            cast.send();    
 
+
+        });
+        } else if (responseArray['movie_results'].length === 0){
+           
+            responseArray['tv_results'].forEach(item_movie => {
+            const id_movie = item_movie.id;
+            function castListener() {
+                const responseCastArray = JSON.parse(this.responseText);
+                responseCastArray['cast'].forEach(item_cast =>{
+                    const img_cast = url_image + '/t/p/w138_and_h175_face/'+item_cast.profile_path;
+                    $(".cast").append(`
+                    <div class="cast-it">
+                        <div class="cast-left">
+                            <img src="${img_cast}" alt="">
+                             <a href="#">${item_cast.name}</a>
+                        </div>
+                        <p>${item_cast.character}</p>
+                    </div>
+                    `);
+                });
+                responseCastArray['crew'].forEach(item_crew =>{
+                    const img_crew = url_image + '/t/p/w138_and_h175_face/'+item_crew.profile_path;
+                    $(".crew").append(`
+                    <div class="cast-it">
+                        <div class="cast-left">
+                            <img src="${img_crew}" alt="">
+                             <a href="#">${item_crew.name}</a>
+                        </div>
+                        <p>${item_crew.department}</p>
+                    </div>
+                    `);
+                })
+            }
+            const cast = new XMLHttpRequest();
+            cast.addEventListener("load", castListener);
+            cast.open("GET", url+"/3/tv/"+id_movie+"/credits");
+            cast.setRequestHeader("Authorization", key);
+            cast.send();    
+
+
+        });
+        }
+       
+        }
+        
+        const movie = new XMLHttpRequest();
+        movie.addEventListener("load", movieListener);
+        movie.open("GET", url+"/3/find/{{ $movie->imdb }}?external_source=imdb_id");
+        movie.setRequestHeader("Authorization", key);
+        movie.send();
+</script>
 @endsection

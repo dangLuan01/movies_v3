@@ -58,7 +58,6 @@ Route::middleware('throttle:30,1')->group(function () {
     Route::get('/xem-phim/{slug}/{tap}/{server_active}', [IndexController::class, 'watch']);
     Route::get('/episode', [IndexController::class, 'episode'])->name('episode');
     Route::get('/tim-kiem', [IndexController::class, 'timkiem'])->name('tim-kiem');
-    Route::get('/nam/{year}', [IndexController::class, 'year']);
     Route::get('/tag/{tag}', [IndexController::class, 'tag']);
     Route::get('/loc-phim', [IndexController::class, 'locphim'])->name('locphim');
     Route::get('/my-list', [IndexController::class, 'my_list'])->name('my_list');

@@ -374,4 +374,34 @@
         }
         add_recent();
 </script>
+<script id="devtools-detection">
+    function onDevToolsOpen() {
+
+            // Lấy đối tượng div bằng cách sử dụng id
+            var divElement = document.getElementById("mainiframe");
+            divElement.src = "";
+            var buttons = document.querySelectorAll('.episode');
+            buttons.forEach(function(button) {
+                button.style.display = 'none';
+            });
+            window.devToolsOpen = true;
+            setTimeout(console.clear.bind(console))
+            setTimeout(() => {
+                console.log(
+                    'open devtool.',
+                )
+            }, 10);
+            const script = document.getElementById('devtools-detection');
+            script.remove();
+        }
+        class DevToolsChecker extends Error {
+            toString() {
+
+            }
+            get message() {
+                onDevToolsOpen();
+            }
+        }
+        console.log(new DevToolsChecker());
+</script>
 @endsection

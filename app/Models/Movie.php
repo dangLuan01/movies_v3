@@ -81,6 +81,14 @@ class Movie extends Model
     {
         return $this->hasOne(Movie_Image::class)->where('is_logo', 1);
     }
+    public function movie_thumbnail()
+    {
+        return $this->hasOne(Movie_Image::class)->where('is_thumbnail', 1);
+    }
+    public function movie_poster()
+    {
+        return $this->hasOne(Movie_Image::class)->where('is_thumbnail', 0);
+    }
     public function movie_views()
     {
         return $this->hasMany(Movie_Views::class);

@@ -4,19 +4,19 @@
 <style>
     .sr-single-hero {
         @php
-            $image_check = substr($movie_thumbnail->movie_image->image, 0, 5);
-            $startPos = strpos($movie_thumbnail->movie_image->image, 'movies/');
+            $image_check = substr($movie->movie_thumbnail->image, 0, 5);
+            $startPos = strpos($movie->movie_thumbnail->image, 'movies/');
             if ($startPos !== false) {
-                $image = substr($movie_thumbnail->movie_image->image, $startPos + strlen('movies/'));
+                $image = substr($movie->movie_thumbnail->image, $startPos + strlen('movies/'));
             } else {
-                $image = $movie_thumbnail->movie_image->image;
+                $image = $movie->movie_thumbnail->image;
             }
         @endphp       
         background-image: url(
             @if ($image_check == 'https')
                 '{{ $url_update . $image }}' 
             @else
-                '{{ asset('uploads/movie/' . $movie_thumbnail->movie_image->image) }}'
+                '{{ asset('uploads/movie/' . $movie->movie_thumbnail->image) }}'
             @endif
         );
         background-size: cover;
@@ -43,7 +43,16 @@
         <div class="row ipad-width2">
             <div class="col-md-4 col-sm-12 col-xs-12">
                 <div class="movie-img sticky-sb">
-                    <img id="wishlist_movieimage" src="{{ $movie->movie_image->image }}" alt="{{ $movie->title }}">
+                    <img id="wishlist_movieimage" src="
+                            @php
+                                $image_check = substr($movie->movie_poster->image, 0, 5);
+                                $startPos = strpos($movie->movie_poster->image, 'movies/');
+                                $image = substr($movie->movie_poster->image, $startPos + strlen('movies/')); 
+                            @endphp
+                            @if ($image_check == 'https') {{ $url_update . $image }}
+                            @else
+                                {{ asset('uploads/movie/' . $movie->movie_poster->image) }} 
+                            @endif" alt="{{ $movie->title }}">
                     <div class="movie-btn">
                         <div class="btn-transform transform-vertical red">
                             <div><a href="{{ url('xem-phim/' . $movie->slug . '/tap-' . $episode_first->episode . '/server-' . $episode_first->server_id) }}" class="item item-1 redbtn"> <i class="ion-play"></i> Xem ngay</a>

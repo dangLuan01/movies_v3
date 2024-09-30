@@ -664,9 +664,6 @@ class IndexController extends Controller
 
         $category = Category::orderBy('id', 'ASC')->where('status', 1)->get();
         $genre = Genre::where('status', 1)->orderBy('id', 'DESC')->get();
-        $movie_thumbnail = Movie::select('id')->with(['movie_image' => function ($thumb) {
-            $thumb->where('is_thumbnail', 1);
-        }])->where('slug', $slug)->where('status', 1)->first();
 
         $movie = Movie::with('category', 'genre', 'country', 'movie_genre', 'movie_cast', 'movie_directors', 'movie_tags', 'movie_views')->where('slug', $slug)->where('status', 1)->first();
         if (!isset($movie)) {
@@ -734,7 +731,7 @@ class IndexController extends Controller
         $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
         $url_update = $api_ophim['pathImage'];
 
-        return view('pages.movie', compact('category', 'genre', 'movie', 'related', 'episode', 'episode_first', 'episode_current_list_count', 'times', 'values', 'movie_thumbnail', 'url_update'));
+        return view('pages.movie', compact('category', 'genre', 'movie', 'related', 'episode', 'episode_first', 'episode_current_list_count', 'times', 'values', 'url_update'));
     }
     public function add_rating(Request $request)
     {

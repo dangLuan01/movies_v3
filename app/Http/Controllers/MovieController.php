@@ -48,23 +48,23 @@ class MovieController extends Controller
     public function index()
     {
         try {
-            $category = Category::where('status', 1)->pluck('title', 'id');
-            $genre = Genre::where('status', 1)->pluck('title', 'id');
-            $list_genre = Genre::all()->where('status', 1);
-            $country = Country::where('status', 1)->pluck('title', 'id');
+            // $category = Category::where('status', 1)->pluck('title', 'id');
+            // $genre = Genre::where('status', 1)->pluck('title', 'id');
+            // $list_genre = Genre::all()->where('status', 1);
+            // $country = Country::where('status', 1)->pluck('title', 'id');
             $list = Movie::with('category', 'movie_genre', 'country', 'genre', 'movie_description', 'movie_trailer', 'movie_tags', 'movie_image', 'movie_cast')->withCount(['episode' => function ($query) {
                 $query->select(DB::raw('count(distinct(episode))'));
             }])->orderBy('id', 'DESC')->get();
 
-            $path = public_path() . "/json/";
-            if (!is_dir($path)) {
-                mkdir($path, 0777, true);
-            }
+            // $path = public_path() . "/json/";
+            // if (!is_dir($path)) {
+            //     mkdir($path, 0777, true);
+            // }
 
-            File::put($path . 'movie.json', json_encode($list));
+            // File::put($path . 'movie.json', json_encode($list));
             //return json_encode($list);
 
-            return view('admincp.movie.index', compact('list', 'genre', 'category', 'country', 'list_genre'));
+            return view('admincp.movie.index', compact('list'));
         } catch (Exception $e) {
             return $e;
         }

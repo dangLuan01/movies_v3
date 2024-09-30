@@ -25,15 +25,30 @@
     <title>
         {{ $movie->title }} - NEST PHIM
     </title>
+    @elseif(isset($tag))
+    <title> {{ $tag }} - Xem Phim Không Quảng Cáo - NESTPHIM</title>
+    @elseif(isset($cast_slug))
+    <title> Ngôi sao {{ $cast_slug->title }} - Xem những phim của {{ $cast_slug->title }}</title>
+    @elseif(isset($directors_slug->name))
+    <title> Đạo diễn {{ $directors_slug->name }} - Xem những phim của {{ $directors_slug->name }} - NESTPHIM</title>
+    @elseif(isset($gen_slug->title))
+    <title> Xem phim {{ $gen_slug->title }} trên NESTPHIM không quảng cáo</title>
     @else
-    <title>NEST PHIM | Xem Phim Chill Không Quảng Cáo</title>
+    <title> NEST PHIM - Xem Phim Không Quảng Cáo</title>
     @endif
-    @if (!isset($movie->slug))
+    @if (isset($tag))
+    <meta name="description" content="Xem Phim {{ $tag }} chillout không quảng cáo tại nestphim, phim {{ $tag }} hd, phim {{ $tag }} vietsub" />
+    @elseif (isset($movie->slug))
+    <meta name="description" content="Xem Phim {{ $movie->title }} tại nestphim ({!! $movie->movie_description->description !!})" />
+    @elseif(isset($cast_slug))
+    <meta name="description" content="Xem Phim {{ $cast_slug->title }} chillout không quảng cáo tại nestphim, phim do {{ $cast_slug->title }} đóng, phim {{ $cast_slug->title }} vietsub" />
+    @elseif(isset($directors_slug->name))
+    <meta name="description" content="Xem Phim {{ $directors_slug->name }} chillout không quảng cáo tại nestphim, phim do {{ $directors_slug->name }} đạo diễn, phim {{ $directors_slug->name }} vietsub" />
+    @elseif(isset($gen_slug->title))
+    <meta name="description" content="Xem Phim {{ $gen_slug->title }} mới nhất chillout không quảng cáo tại nestphim, phim {{ $gen_slug->title }} hd, phim {{ $gen_slug->title }} vietsub, phim {{ $gen_slug->title }} hay" />
+    @else
     <meta name="description"
         content="nestphim - Xem phim hay nhất, phim mới nhất, phim Việt, phim Hàn, phim Trung, phim Âu Mỹ. Kho phim khổng lồ, chất lượng HD, Vietsub đầy đủ. Truy cập nestphim ngay để thưởng thức!" />
-    @else
-    <meta name="description"
-        content="Xem Phim {{ $movie->title }} tại nestphim ({!! $movie->movie_description->description !!})" />
     @endif
     @if (!isset($movie->slug))
     <meta name="title" content="NESTPHIM | Xem Phim Không Quảng Cáo" />
@@ -46,7 +61,7 @@
     @if (!isset($movie->slug))
     <meta property="og:title" content="Nestphim nơi Xem phim không quảng cáo" />
     @else
-    <meta property="og:title" content="Phim {{ $movie->title }} tại nestphim, {{ $movie->name_english }}" />
+    <meta property="og:title" content="Phim {{ $movie->title }} vietsud, thuyết minh, {{ $movie->name_english }}" />
     @endif
     <meta property="og:type" content="website" />
     @if (!isset($movie->slug))
@@ -62,20 +77,11 @@
         content="Xem Phim {{ $movie->title }} - {{ $movie->name_english }} ({{ $movie->year }}) trên nestphim" />
     @endif
     <meta property="og:site_name" content="nestphim.site" />
-    @if (!isset($movie->slug))
-    <meta property="og:image" content="" />
-    @else
+    @if (isset($movie->slug))
     <meta property="og:image" content="{{ asset('uploads/movie/' . $movie->movie_image->image) }}" />
     @endif
     <meta property="og:image:width" content="300" />
     <meta property="og:image:height" content="300" />
-    @if (!isset($movie->slug))
-    <meta name="keywords"
-        content="nestphim, xem phim online nestphim, phim hay nhất nestphim, phim mới cập nhật nestphim, xem phim miễn phí nestphim, phim chất lượng cao nestphim" />
-    @else
-    <meta name="keywords"
-        content="xem phim {{ $movie->title }} nestphim,xem phim {{ $movie->title }} vietsub nestphim,xem phim {{ $movie->title }} online nestphim,xem phim {{ $movie->title }} không quảng cáo nestphim,xem phim {{ $movie->title }} hd nestphim,xem phim {{ $movie->title }} full hd nestphim,xem phim {{ $movie->title }} 1080p nestphim,xem phim {{ $movie->title }} vietsub,xem phim {{ $movie->title }} free,xem phim {{ $movie->title }} miễn ph&#237;,xem online, phim chất lượng, si&#234;u n&#233;t, bluray,nestphim, xem phim {{ $movie->name_english }}" />
-    @endif
 
 
     @if (!isset($movie->slug))

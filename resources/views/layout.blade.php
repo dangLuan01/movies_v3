@@ -92,7 +92,7 @@
 <body>
     <!--preloading-->
     <div id="preloader">
-        {{-- <img class="logo" src="" alt="" width="119" height="58"> --}}
+        <img class="logo" src="{{ asset('uploads/logo/pngwing1.com.png') }}" alt="nestphim" width="119" height="58">
         <div id="status">
             <span></span>
             <span></span>

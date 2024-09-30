@@ -402,7 +402,7 @@
 </script>
 <script>
         const key ="Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMmViYzQ1NzAyODhlY2QyZDNkZDA3NWQ0YzdkNTRhMSIsIm5iZiI6MTcyNzMxNjk2MS4wOTYwNDgsInN1YiI6IjY2MWI0YjVlNGU0ZGZmMDE5ZDAzN2RkMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.tfm-5-BNTHcfuo4wR4LK6FYr2cSCmEiqw_kj9JCDUXk";
-        var url = "https://api.themoviedb.org";
+        var url_api = "https://api.themoviedb.org";
         var url_image = "https://media.themoviedb.org";
         function movieListener() {
         // Parse JSON response
@@ -441,7 +441,7 @@
             }
             const cast = new XMLHttpRequest();
             cast.addEventListener("load", castListener);
-            cast.open("GET", url+"/3/movie/"+id_movie+"/credits");
+            cast.open("GET", url_api+"/3/movie/"+id_movie+"/credits");
             cast.setRequestHeader("Authorization", key);
             cast.send();    
 
@@ -480,7 +480,7 @@
             }
             const cast = new XMLHttpRequest();
             cast.addEventListener("load", castListener);
-            cast.open("GET", url+"/3/tv/"+id_movie+"/credits");
+            cast.open("GET", url_api+"/3/tv/"+id_movie+"/credits");
             cast.setRequestHeader("Authorization", key);
             cast.send();    
 
@@ -492,7 +492,7 @@
         
         const movie = new XMLHttpRequest();
         movie.addEventListener("load", movieListener);
-        movie.open("GET", url+"/3/find/{{ $movie->imdb }}?external_source=imdb_id");
+        movie.open("GET", url_api+"/3/find/{{ $movie->imdb }}?external_source=imdb_id");
         movie.setRequestHeader("Authorization", key);
         movie.send();
 </script>

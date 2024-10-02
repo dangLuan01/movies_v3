@@ -99,22 +99,23 @@
                                     <div class="slide-it">
                                         <div class="movie-item">
                                             <div class="mv-img">
-                                                <img src="                    @php
-                                                $image_check = substr($movie->movie_image->image, 0, 5);
-                                                $startPos = strpos($movie->movie_image->image, 'movies/');
-                                                $image = substr($movie->movie_image->image, $startPos + strlen('movies/')); @endphp
+                                                <img src="@php
+                                                $image_check = substr($movie['movie']->movie_image->image, 0, 5);
+                                                $startPos = strpos($movie['movie']->movie_image->image, 'movies/');
+                                                $image = substr($movie['movie']->movie_image->image, $startPos + strlen('movies/')); @endphp
                                                 @if ($image_check == 'https') {{ $url_update . $image }}
                                                     @else
-                                                       {{ asset('uploads/movie/' . $movie->movie_image->image) }} @endif"
-                                                    alt="{{ $movie->title }}" width="190" height="284" style="width: 190px; height:230px;" loading="lazy">
+                                                       {{ asset('uploads/movie/' . $movie['movie']->movie_image->image) }} @endif"
+                                                    alt="{{ $movie['movie']->title }}" width="190" height="284" style="width: 190px; height:230px;" loading="lazy">
                                             </div>
                                             <div class="hvr-inner">
-                                                <a href="{{ route('movie',$movie->slug) }}"> Xem <i
+                                                <a href="{{ route('movie',$movie['movie']->slug) }}"> Xem <i
                                                         class="ion-android-arrow-dropright"></i> </a>
                                             </div>
                                             <div class="title-in">
-                                                <h6><a href="{{ route('movie', $movie->slug) }}">{{ $movie->title }}</a></h6>
-                                                
+                                                <h6><a href="{{ route('movie', $movie['movie']->slug) }}">{{ $movie['movie']->title }}</a></h6>
+                                                <p><i class="ion-android-star"></i><span>
+                                                </span>{{ $movie['imdbRating'] }} /10</p>
                                             </div>
                                         </div>
                                     </div>
@@ -168,7 +169,7 @@
                 </div>
                 <div class="tabs">
                     <ul class="tab-links">
-                        <li class="active"><a href="#tab21"></a></li>
+                        <li class="active"><a href="#tab21">#Đề xuất</a></li>
                     </ul>
                     <div class="tab-content">
                         <div id="tab21" class="tab active" >

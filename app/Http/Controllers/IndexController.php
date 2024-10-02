@@ -63,52 +63,214 @@ class IndexController extends Controller
     }
     public function home()
     {
+       
         $category = Cache::remember('categories', 3600, function () {
-                return Category::orderBy('id', 'ASC')->where('status', 1)->get();
+            return Category::orderBy('id', 'ASC')->where('status', 1)->get();
         });
-        
-        // Cache cho danh sách quốc gia 
+  
+       
+          // Cache cho danh sách quốc gia 
         $country_ids = Cache::remember('country_ids', 600, function () {
             return Country::whereIn('title', ['Au My', 'Phap', 'Anh', 'Y', 'Duc'])->pluck('id');
         });
-
-        // HOT MOVIES
-        $hot = Cache::remember('hot_movie', 300, function () {
-            return Movie::with('movie_trailer')->where('hot', 1)
-                ->where('status', 1)
-                ->with(['episode' => function ($query) {
-                    $query->orderBy('episode', 'ASC');
-                }, 'movie_image' => function ($thumb) {
-                    $thumb->where('is_thumbnail', 0);
-                }])
-                ->orderBy('updated_at', 'DESC')
-                ->limit(9)->get();
+            $movies_data = Cache::remember('movies_combined', 300, function () use ($country_ids) {
+            // Tìm các thể loại
+            $hoat_hinh_slug = Genre::where('title', 'LIKE', '%hoat hinh%')->first();
+            $netflix_slug = Genre::where('title', 'LIKE', '%netflix%')->first();
+            $oscar_slug = Genre::where('title', 'LIKE', '%Oscar%')->first();
+            $horror_slug = Genre::where('title', 'LIKE', '%kinh di%')->first();
+        
+            $hoat_hinh_ids = $hoat_hinh_slug ? Movie_Genre::where('genre_id', $hoat_hinh_slug->id)->pluck('movie_id') : collect();
+            $netflix_ids = $netflix_slug ? Movie_Genre::where('genre_id', $netflix_slug->id)->pluck('movie_id') : collect();
+            $oscar_ids = $oscar_slug ? Movie_Genre::where('genre_id', $oscar_slug->id)->pluck('movie_id') : collect();
+            $horror_ids = $horror_slug ? Movie_Genre::where('genre_id', $horror_slug->id)->pluck('movie_id') : collect();
+        
+            return [
+                'hot_movies' => Movie::where('hot', 1)
+                    ->where('status', 1)
+                    ->with(['episode', 'movie_image' => function ($thumb) {
+                        $thumb->where('is_thumbnail', 0);
+                    }])
+                    ->orderBy('updated_at', 'DESC')
+                    ->limit(9)
+                    ->get(),
+        
+                'hoat_hinh_movies' => Movie::whereIn('id', $hoat_hinh_ids)
+                    ->where('status', 1)
+                    ->with(['episode', 'movie_image' => function ($thumb) {
+                        $thumb->where('is_thumbnail', 0);
+                    }])
+                    ->orderBy('updated_at', 'DESC')
+                    ->limit(16)
+                    ->get(['id', 'title', 'updated_at', 'imdb', 'slug']),
+        
+                'netflix_movies' => Movie::whereIn('id', $netflix_ids)
+                    ->where('status', 1)
+                    ->with(['episode', 'movie_image' => function ($thumb) {
+                        $thumb->where('is_thumbnail', 0);
+                    }])
+                    ->orderBy('updated_at', 'DESC')
+                    ->limit(12)
+                    ->get(['id', 'title', 'updated_at', 'imdb', 'slug']),
+        
+                'oscar_movies' => Movie::whereIn('id', $oscar_ids)
+                    ->where('status', 1)
+                    ->with(['episode', 'movie_image' => function ($thumb) {
+                        $thumb->where('is_thumbnail', 0);
+                    }])
+                    ->orderBy('updated_at', 'DESC')
+                    ->limit(16)
+                    ->get(['id', 'title', 'updated_at', 'imdb', 'slug']),
+        
+                'us_movies' => Movie::whereIn('country_id', $country_ids)
+                    ->where('type_movie', 0)
+                    ->where('status', 1)
+                    ->with(['episode', 'movie_image' => function ($thumb) {
+                        $thumb->where('is_thumbnail', 0);
+                    }])
+                    ->orderBy('updated_at', 'DESC')
+                    ->limit(12)
+                    ->get(['id', 'title', 'updated_at', 'imdb', 'slug']),
+        
+                'horror_movies' => Movie::whereIn('id', $horror_ids)
+                    ->where('type_movie', 0)
+                    ->where('status', 1)
+                    ->with(['episode', 'movie_image' => function ($thumb) {
+                        $thumb->where('is_thumbnail', 0);
+                    }])
+                    ->orderBy('updated_at', 'DESC')
+                    ->limit(12)
+                    ->get(['id', 'title', 'updated_at', 'imdb', 'slug']),
+        
+                // Thêm TV Series (Phim bộ)
+                'tv_series' => Movie::where('type_movie', 1)
+                    ->where('status', 1)
+                    ->with(['episode', 'movie_image' => function ($thumb) {
+                        $thumb->where('is_thumbnail', 0);
+                    }])
+                    ->orderBy('updated_at', 'DESC')
+                    ->limit(16)
+                    ->get(['id', 'title', 'updated_at', 'imdb', 'slug']),
+        
+                // Thêm Phim Mỹ Sắp Chiếu (us_coming)
+                'us_coming' => Movie::where('type_movie', 0)
+                    ->where('country_id', $country_ids)
+                    ->where('status', 0) 
+                    ->with(['episode', 'movie_image' => function ($thumb) {
+                        $thumb->where('is_thumbnail', 0);
+                    }])
+                    ->orderBy('updated_at', 'ASC') 
+                    ->limit(12)
+                    ->get(['id', 'title', 'updated_at', 'imdb', 'slug']),
+            ];
         });
         
-        $responses = Http::pool(function ($pool) use ($hot) {
-            return collect($hot)->map(function ($movie) use ($pool) {
-                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
-            });
+        $hot_movies = $movies_data['hot_movies'];
+        $hoat_hinh_movies = $movies_data['hoat_hinh_movies'];
+        $netflix_movies = $movies_data['netflix_movies'];
+        $oscar_movies = $movies_data['oscar_movies'];
+        $us_movies = $movies_data['us_movies'];
+        $horror_movies = $movies_data['horror_movies'];
+        $tv_series = $movies_data['tv_series'];        
+        $us_coming = $movies_data['us_coming'];       
+     
+
+        $all_movies = $hot_movies->concat($hoat_hinh_movies)
+        ->concat($netflix_movies)
+        ->concat($oscar_movies)
+        ->concat($us_movies)
+        ->concat($horror_movies)
+        ->concat($tv_series)
+        ->concat($us_coming)
+        ->values(); 
+
+        $hot_count = count($hot_movies);
+        $hoat_hinh_count = count($hoat_hinh_movies);
+        $netflix_count = count($netflix_movies);
+        $oscar_count = count($oscar_movies);
+        $us_count = count($us_movies);
+        $horror_count = count($horror_movies);
+        $tv_series_count = count($tv_series);
+        $us_coming_count = count($us_coming);
+
+        // Gửi yêu cầu OMDB API
+        $responses = Http::pool(function ($pool) use ($all_movies) {
+            return $all_movies->map(function ($movie) use ($pool) {
+                    return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
+                });
         });
 
-        // Xử lý các phản hồi
+        // Danh sách phim với IMDb rating
+        $hot_with_ratings = [];
+        $movie_animation_with_ratings = [];
+        $movie_netflix_with_ratings = [];
+        $movie_oscar_with_ratings = [];
+        $movie_us_with_ratings = [];
+        $movie_horror_with_ratings = [];
+        $tv_series_with_ratings = [];
+        $movie_us_coming = [];
+
+        // Xử lý phản hồi cho tất cả các phim
         foreach ($responses as $key => $response) {
-            if ($response->successful()) {
-                $imdbRating_hot = $response['Response'] == "True" && $response['imdbRating'] != "N/A"
-                    ? $response['imdbRating']
-                    : "0.0";
-            } else {
-                $imdbRating_hot = "0.0";
-            }
-    
+        $imdbRating = $response->successful() && $response['Response'] == "True" && $response['imdbRating'] != "N/A"
+        ? $response['imdbRating']
+        : "0.0";
+
+        // Dựa vào $key để phân loại phản hồi thành các danh sách phim
+        if ($key < $hot_count) {
+        // Phim hot
             $hot_with_ratings[] = [
-                'movie' => $hot[$key],
-                'imdbRating' => $imdbRating_hot,
+            'movie' => $hot_movies[$key],
+            'imdbRating' => $imdbRating,
+            ];
+        } 
+        elseif ($key < $hot_count + $hoat_hinh_count) {
+        // Phim hoạt hình
+            $movie_animation_with_ratings[] = [
+            'movie' => $hoat_hinh_movies[$key - $hot_count],
+            'imdbRating' => $imdbRating,
+            ];
+        } elseif ($key < $hot_count + $hoat_hinh_count + $netflix_count) {
+        // Phim Netflix
+            $movie_netflix_with_ratings[] = [
+            'movie' => $netflix_movies[$key - $hot_count - $hoat_hinh_count],
+            'imdbRating' => $imdbRating,
+            ];
+        } elseif ($key < $hot_count + $hoat_hinh_count + $netflix_count + $oscar_count) {
+        // Phim Oscar
+            $movie_oscar_with_ratings[] = [
+            'movie' => $oscar_movies[$key - $hot_count - $hoat_hinh_count - $netflix_count],
+            'imdbRating' => $imdbRating,
+            ];
+        } elseif ($key < $hot_count + $hoat_hinh_count + $netflix_count + $oscar_count + $us_count) {
+        // Phim Mỹ
+            $movie_us_with_ratings[] = [
+            'movie' => $us_movies[$key - $hot_count - $hoat_hinh_count - $netflix_count - $oscar_count],
+            'imdbRating' => $imdbRating,
+            ];
+        } elseif ($key < $hot_count + $hoat_hinh_count + $netflix_count + $oscar_count + $us_count + $horror_count) {
+        // Phim kinh dị
+            $movie_horror_with_ratings[] = [
+            'movie' => $horror_movies[$key - $hot_count - $hoat_hinh_count - $netflix_count - $oscar_count - $us_count],
+            'imdbRating' => $imdbRating,
+            ];
+        } elseif ($key < $hot_count + $hoat_hinh_count + $netflix_count + $oscar_count + $us_count + $horror_count + $tv_series_count) {
+        // Phim bộ
+            $tv_series_with_ratings[] = [
+            'movie' => $tv_series[$key - $hot_count - $hoat_hinh_count - $netflix_count - $oscar_count - $us_count - $horror_count],
+            'imdbRating' => $imdbRating,
+            ];
+        } else {
+        // Phim Mỹ sắp chiếu
+            $movie_us_coming[] = [
+            'movie' => $us_coming[$key - $hot_count - $hoat_hinh_count - $netflix_count - $oscar_count - $us_count - $horror_count - $tv_series_count],
+            'imdbRating' => $imdbRating,
             ];
         }
+        }
         
-        // TOP VIEW MOVIES
-        $topview = Cache::remember('topview', 300, function () {
+         // TOP VIEW MOVIES
+         $topview = Cache::remember('topview', 300, function () {
             return Movie::select('title', 'slug', 'image', DB::raw('SUM(count_views) as count_views'))
                 ->join('movie_views', 'movies.id', '=', 'movie_views.movie_id')
                 ->join('movie_image', 'movie_views.movie_id', '=', 'movie_image.movie_id')
@@ -119,250 +281,9 @@ class IndexController extends Controller
                 ->limit(5)
                 ->get();
         });
-
-        // HOAT HINH MOVIES
-        $movie_animation = Cache::remember('movie_animation', 300, function () {
-            $gen_slugs = Genre::where('title', 'LIKE', '%hoat hinh%')->first();
-            if (!$gen_slugs) {
-                return collect();  // Trả về bộ sưu tập rỗng nếu không tìm thấy genre
-            }
-            $movie_ids = Movie_Genre::where('genre_id', $gen_slugs->id)->pluck('movie_id');
-
-            return Movie::whereIn('id', $movie_ids)
-                ->where('status', 1)
-                ->with(['episode', 'movie_image' => function ($thumb) {
-                    $thumb->where('is_thumbnail', 0);
-                }])
-                ->orderBy('updated_at', 'DESC')
-                ->limit(16)
-                ->get(['id', 'title', 'updated_at', 'imdb','slug']);
-        });
-        $responses = Http::pool(function ($pool) use ($movie_animation) {
-            return collect($movie_animation)->map(function ($movie) use ($pool) {
-                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
-            });
-        });
-
-        // Xử lý các phản hồi
-        foreach ($responses as $key => $response) {
-            if ($response->successful()) {
-                $imdbRating_animation = $response['Response'] == "True" && $response['imdbRating'] != "N/A"
-                    ? $response['imdbRating']
-                    : "0.0";
-            } else {
-                $imdbRating_animation = "0.0";
-            }
-    
-            $movie_animation_with_ratings[] = [
-                'movie' => $movie_animation[$key],
-                'imdbRating' => $imdbRating_animation,
-            ];
-        }
-        
-
-        // NETFLIX MOVIES
-        $movie_netflix = Cache::remember('movie_netflix', 300, function () {
-            $gen_netflix_slug = Genre::where('title', 'LIKE', '%netflix%')->first();
-            if (!$gen_netflix_slug) {
-                return collect();  // Trả về bộ sưu tập rỗng nếu không tìm thấy genre
-            }
-            $movie_ids = Movie_Genre::where('genre_id', $gen_netflix_slug->id)->pluck('movie_id');
-
-            return Movie::whereIn('id', $movie_ids)
-                ->where('status', 1)
-                ->with(['episode', 'movie_image' => function ($thumb) {
-                    $thumb->where('is_thumbnail', 0);
-                }])
-                ->orderBy('updated_at', 'DESC')
-                ->limit(12)
-                ->get(['id', 'title', 'updated_at', 'imdb','slug']);
-        });
-        $responses = Http::pool(function ($pool) use ($movie_netflix) {
-            return collect($movie_netflix)->map(function ($movie) use ($pool) {
-                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
-            });
-        });
-
-        // Xử lý các phản hồi
-        foreach ($responses as $key => $response) {
-            if ($response->successful()) {
-                $imdbRating_netflix = $response['Response'] == "True" && $response['imdbRating'] != "N/A"
-                    ? $response['imdbRating']
-                    : "0.0";
-            } else {
-                $imdbRating_netflix = "0.0";
-            }
-    
-            $movie_netflix_with_ratings[] = [
-                'movie' => $movie_netflix[$key],
-                'imdbRating' => $imdbRating_netflix,
-            ];
-        }
-
-        // OSCAR MOVIES
-        $movies_oscar = Cache::remember('movies_oscar', 300, function () {
-            $oscar_slug = Genre::where('title', 'LIKE', '%Oscar%')->first();
-            if (!$oscar_slug) {
-                return collect();  // Trả về bộ sưu tập rỗng nếu không tìm thấy genre
-            }
-            $movie_ids = Movie_Genre::where('genre_id', $oscar_slug->id)->pluck('movie_id');
-
-            return Movie::whereIn('id', $movie_ids)
-                ->where('status', 1)
-                ->with(['episode', 'movie_image' => function ($thumb) {
-                    $thumb->where('is_thumbnail', 0);
-                }])
-                ->orderBy('updated_at', 'DESC')
-                ->limit(16)
-                ->get(['id', 'title', 'updated_at', 'imdb','slug']);
-        });
-        $responses = Http::pool(function ($pool) use ($movies_oscar) {
-            return collect($movies_oscar)->map(function ($movie) use ($pool) {
-                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
-            });
-        });
-
-        // Xử lý các phản hồi
-        foreach ($responses as $key => $response) {
-            if ($response->successful()) {
-                $imdbRating_oscar = $response['Response'] == "True" && $response['imdbRating'] != "N/A"
-                    ? $response['imdbRating']
-                    : "0.0";
-            } else {
-                $imdbRating_oscar = "0.0";
-            }
-    
-            $movie_oscar_with_ratings[] = [
-                'movie' => $movies_oscar[$key],
-                'imdbRating' => $imdbRating_oscar,
-            ];
-        }
-
-        // MOVIE US
-        $movie_us = Cache::remember('movie_us', 300, function () use ($country_ids) {
-            return Movie::whereIn('country_id', $country_ids)
-                ->where('type_movie', 0)
-                ->where('status', 1)
-                ->with(['episode', 'movie_image' => function ($thumb) {
-                    $thumb->where('is_thumbnail', 0);
-                }])
-                ->orderBy('updated_at', 'DESC')
-                ->limit(12)
-                ->get(['id', 'title', 'updated_at', 'imdb','slug']);
-        });
-        $responses = Http::pool(function ($pool) use ($movie_us) {
-            return collect($movie_us)->map(function ($movie) use ($pool) {
-                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
-            });
-        });
-
-        // Xử lý các phản hồi
-        foreach ($responses as $key => $response) {
-            if ($response->successful()) {
-                $imdbRating_us = $response['Response'] == "True" && $response['imdbRating'] != "N/A"
-                    ? $response['imdbRating']
-                    : "0.0";
-            } else {
-                $imdbRating_us = "0.0";
-            }
-    
-            $movie_us_with_ratings[] = [
-                'movie' => $movie_us[$key],
-                'imdbRating' => $imdbRating_us,
-            ];
-        }
-
-        // MOVIE US COMING SOON
-        $movie_us_coming = Cache::remember('movie_us_coming', 300, function () use ($country_ids) {
-            return Movie::whereIn('country_id', $country_ids)
-                ->where('status', 0)
-                ->with(['movie_image' => function ($thumb) {
-                    $thumb->where('is_thumbnail', 0);
-                }])
-                ->orderBy('updated_at', 'DESC')
-                ->limit(4)
-                ->get(['id', 'title', 'updated_at', 'imdb', 'status','slug']);
-        });
-
-        // TV SERIES THAILAND
-        $tv_series = Cache::remember('tv_series', 300, function () {
-            return Movie::where('type_movie', 1)
-                ->where('status', 1)
-                ->with(['episode', 'movie_image' => function ($thumb) {
-                    $thumb->where('is_thumbnail', 0);
-                }])
-                ->orderBy('updated_at', 'DESC')
-                ->limit(16)
-                ->get(['id', 'title', 'updated_at', 'imdb','slug']);
-        });
-        
-        $responses = Http::pool(function ($pool) use ($tv_series) {
-            return collect($tv_series)->map(function ($movie) use ($pool) {
-                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
-            });
-        });
-
-        // Xử lý các phản hồi
-        foreach ($responses as $key => $response) {
-            if ($response->successful()) {
-                $imdbRating = $response['Response'] == "True" && $response['imdbRating'] != "N/A"
-                    ? $response['imdbRating']
-                    : "0.0";
-            } else {
-                $imdbRating = "0.0";
-            }
-    
-            $tv_series_with_ratings[] = [
-                'movie' => $tv_series[$key],
-                'imdbRating' => $imdbRating,
-            ];
-        }
-       
-       
-        // HORROR MOVIES
-        $movie_horror = Cache::remember('movie_horror', 300, function () {
-            $gen_horror_slug = Genre::where('title', 'LIKE', '%kinh di%')->first();
-            if (!$gen_horror_slug) {
-                return collect();  // Trả về bộ sưu tập rỗng nếu không tìm thấy genre
-            }
-            $movie_ids = Movie_Genre::where('genre_id', $gen_horror_slug->id)->pluck('movie_id');
-
-            return Movie::whereIn('id', $movie_ids)
-                ->where('type_movie', 0)
-                ->where('status', 1)
-                ->with(['episode', 'movie_image' => function ($thumb) {
-                    $thumb->where('is_thumbnail', 0);
-                }])
-                ->orderBy('updated_at', 'DESC')
-                ->limit(12)
-                ->get(['id', 'title', 'updated_at', 'imdb','slug']);
-        });
-        
-        $responses = Http::pool(function ($pool) use ($movie_horror) {
-            return collect($movie_horror)->map(function ($movie) use ($pool) {
-                return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
-            });
-        });
-
-        // Xử lý các phản hồi
-        foreach ($responses as $key => $response) {
-            if ($response->successful()) {
-                $imdbRating_horror = $response['Response'] == "True" && $response['imdbRating'] != "N/A"
-                    ? $response['imdbRating']
-                    : "0.0";
-            } else {
-                $imdbRating_horror = "0.0";
-            }
-    
-            $movie_horror_with_ratings[] = [
-                'movie' => $movie_horror[$key],
-                'imdbRating' => $imdbRating_horror,
-            ];
-        }
-
         $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
         $url_update = $api_ophim['pathImage'];
-        
+      
         return view('pages.home', compact('category', 'hot_with_ratings',  'movie_animation_with_ratings', 'movie_us_with_ratings', 'tv_series_with_ratings', 'movie_horror_with_ratings', 'url_update','movie_oscar_with_ratings','movie_netflix_with_ratings','movie_us_coming','topview'));
     }
     public function category($slug)
@@ -706,7 +627,7 @@ class IndexController extends Controller
                 $values = $api_imdb['imdbRating'];
             }
         } else
-            return $values = "N/A";
+            $values = "N/A";
         // } else
         //     return $values = "Connection false!";
 

@@ -70,9 +70,9 @@ class IndexController extends Controller
   
        
           // Cache cho danh sách quốc gia 
-        $country_ids = Cache::remember('country_ids', 600, function () {
-            return Country::whereIn('title', ['Au My', 'Phap', 'Anh', 'Y', 'Duc'])->pluck('id');
-        });
+            $country_ids = Cache::remember('country_ids', 600, function () {
+                return Country::whereIn('title', ['Au My', 'Phap', 'Anh', 'Y', 'Duc'])->pluck('id');
+            });
             $movies_data = Cache::remember('movies_combined', 300, function () use ($country_ids) {
             // Tìm các thể loại
             $hoat_hinh_slug = Genre::where('title', 'LIKE', '%hoat hinh%')->first();
@@ -101,7 +101,7 @@ class IndexController extends Controller
                         $thumb->where('is_thumbnail', 0);
                     }])
                     ->orderBy('updated_at', 'DESC')
-                    ->limit(16)
+                    ->limit(10)
                     ->get(['id', 'title', 'updated_at', 'imdb', 'slug']),
         
                 'netflix_movies' => Movie::whereIn('id', $netflix_ids)
@@ -110,7 +110,7 @@ class IndexController extends Controller
                         $thumb->where('is_thumbnail', 0);
                     }])
                     ->orderBy('updated_at', 'DESC')
-                    ->limit(12)
+                    ->limit(1)
                     ->get(['id', 'title', 'updated_at', 'imdb', 'slug']),
         
                 'oscar_movies' => Movie::whereIn('id', $oscar_ids)
@@ -119,7 +119,7 @@ class IndexController extends Controller
                         $thumb->where('is_thumbnail', 0);
                     }])
                     ->orderBy('updated_at', 'DESC')
-                    ->limit(16)
+                    ->limit(1)
                     ->get(['id', 'title', 'updated_at', 'imdb', 'slug']),
         
                 'us_movies' => Movie::whereIn('country_id', $country_ids)
@@ -160,7 +160,7 @@ class IndexController extends Controller
                         $thumb->where('is_thumbnail', 0);
                     }])
                     ->orderBy('updated_at', 'ASC') 
-                    ->limit(12)
+                    ->limit(1)
                     ->get(['id', 'title', 'updated_at', 'imdb', 'slug']),
             ];
         });
@@ -181,8 +181,7 @@ class IndexController extends Controller
         ->concat($us_movies)
         ->concat($horror_movies)
         ->concat($tv_series)
-        ->concat($us_coming)
-        ->values(); 
+        ->concat($us_coming); 
 
         $hot_count = count($hot_movies);
         $hoat_hinh_count = count($hoat_hinh_movies);
@@ -192,13 +191,37 @@ class IndexController extends Controller
         $horror_count = count($horror_movies);
         $tv_series_count = count($tv_series);
         $us_coming_count = count($us_coming);
-
-        // Gửi yêu cầu OMDB API
-        $responses = Http::pool(function ($pool) use ($all_movies) {
-            return $all_movies->map(function ($movie) use ($pool) {
-                    return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
-                });
+        
+        $cache_key = 'movies_with_ratings';
+        $cachedMovies = Cache::store('important_cache')->get($cache_key, []);
+        //dd($cachedMovies);
+        // Lọc ra các phim chưa có trong cache
+        $movies_to_request = $all_movies->filter(function ($movie) use ($cachedMovies) {
+            return !isset($cachedMovies[$movie->imdb]);
         });
+        
+        // Nếu có phim chưa có trong cache, gửi request tới OMDB
+        if ($movies_to_request->isNotEmpty()) {
+            $responses = Http::pool(function ($pool) use ($movies_to_request) {
+                return $movies_to_request->map(function ($movie) use ($pool) {
+                    return $pool->get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=f9536f23');
+                });
+            });
+           
+            // Xử lý phản hồi và lưu vào cache
+            foreach ($responses as $key => $response) {
+                $imdbRating = $response->successful() && $response['Response'] == "True" && $response['imdbRating'] != "N/A"
+                    ? $response['imdbRating']
+                    : "0.0";
+                
+                $cachedMovies[$movies_to_request->values()->get($key)->imdb] = $imdbRating;
+            }
+            $newMovies=$cachedMovies;
+            
+            $mergedMovies = array_merge($cachedMovies, $newMovies);
+
+            Cache::store('important_cache')->forever($cache_key, $mergedMovies);
+        }
 
         // Danh sách phim với IMDb rating
         $hot_with_ratings = [];
@@ -211,10 +234,8 @@ class IndexController extends Controller
         $movie_us_coming = [];
 
         // Xử lý phản hồi cho tất cả các phim
-        foreach ($responses as $key => $response) {
-        $imdbRating = $response->successful() && $response['Response'] == "True" && $response['imdbRating'] != "N/A"
-        ? $response['imdbRating']
-        : "0.0";
+        foreach ($all_movies as $key => $movie) {
+            $imdbRating = $cachedMovies[$movie->imdb] ?? "0.0";
 
         // Dựa vào $key để phân loại phản hồi thành các danh sách phim
         if ($key < $hot_count) {

@@ -55,11 +55,14 @@
                             @endif" alt="{{ $movie->title }}">
                     <div class="movie-btn">
                         <div class="btn-transform transform-vertical red">
+                            @foreach($episode->take(-1) as $episode_first)
+                            
                             <div><a href="{{ url('xem-phim/' . $movie->slug . '/tap-' . $episode_first->episode . '/server-' . $episode_first->server_id) }}" class="item item-1 redbtn"> <i class="ion-play"></i> Xem ngay</a>
                             </div>
                             <div><a href="{{ url('xem-phim/' . $movie->slug . '/tap-' . $episode_first->episode . '/server-' . $episode_first->server_id) }}"
                                     class="item item-2 redbtn fancybox-media hvr-grow"><i class="ion-play"></i>{{ $movie->title }}</a>
                             </div>
+                            @endforeach
                         </div>
                         <div class="btn-transform transform-vertical">
                             <div><a href="https://www.youtube.com/embed/{{ $movie->movie_trailer->trailer }}" class="item item-1 yellowbtn"> <i class="ion-card"></i> xem trailer</a>
@@ -122,8 +125,10 @@
                             <ul class="tab-links tabs-mv tabs-series">
                                 <li class="active"><a href="#overview">Tổng quan</a></li>
                                 <li><a href="#cast"> Diển viên </a></li>
-                               
-                                {{-- <li><a href="#season"> Season</a></li> --}}
+                                @if($movie->type_movie == 1)
+                                <li><a href="#season"> Tập phim</a></li>
+                                @endif
+                                
                                 <li><a href="#moviesrelated"> Phim liên quan</a></li>
                             </ul>
                             <div class="tab-content">
@@ -246,25 +251,24 @@
                                        
                                     </div>
                                 </div>
-                               
-                                {{-- <div id="season" class="tab">
-                                    <div class="row">
+                                @if($movie->type_movie == 1)
+                                <div id="season" class="tab">
+                                    <div style="display: flex; flex-wrap:wrap;" class="row">
+                                        @foreach($episode as $epi)
                                         <div class="mvcast-item">
                                             <div class="cast-it">
                                                 <div class="cast-left series-it">
-                                                    <img src="images/uploads/season.jpg" alt="">
+                                                    
                                                     <div>
-                                                        <a href="#">Season 10</a>
-                                                        <p>21 Episodes</p>
-                                                        <p>Season 10 of The Big Bang Theory premiered on September 19,
-                                                            2016.</p>
+                                                        <a href="{{ url('xem-phim/' . $movie->slug . '/tap-' . $epi->episode . '/server-' . $epi->server_id) }}">Tập [ {{ $epi->episode }} ]</a>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                      
+                                        @endforeach
                                     </div>
-                                </div> --}}
+                                </div>
+                                @endif
                                 <div id="moviesrelated" class="tab">
                                     <div class="row">
                                         <h3>Phim liên quan đến</h3>

@@ -625,17 +625,17 @@ class IndexController extends Controller
             $thumb->where('is_thumbnail', 1);
         }])->paginate(5);
         //dd($related);
-        $episode_first = Episode::with('movie')->where('movie_id', $movie->id)->orderBy('episode', 'ASC')->take(1)->first();
+        // $episode_first = Episode::with('movie')->where('movie_id', $movie->id)->orderBy('episode', 'ASC')->take(1)->first();
         //lay tap phim
         $query = "CAST(episode AS SIGNED INTEGER) DESC";
-        $episode = Episode::with('movie')->where('movie_id', $movie->id)->orderByRaw($query)->take(4)->get()->unique('episode');
-        //dd($episode);
+        $episode = Episode::with('movie')->where('movie_id', $movie->id)->orderByRaw($query)->get()->unique('episode');
+        
         //lay tap da them link
-        $episode_current_list = Episode::with('movie')->where('movie_id', $movie->id)->get()->unique('episode');
-        $episode_current_list_count = $episode_current_list->count();
-
+        // $episode_current_list = Episode::with('movie')->where('movie_id', $movie->id)->get()->unique('episode');
+        // $episode_current_list_count = $episode_current_list->count();
+        // dd($episode_current_list_count);
         //xu ly api from imdb
-        // if ($is_conn == true) {
+
         $api_imdb = Http::get('https://www.omdbapi.com/?i=' . $movie->imdb . '&apikey=6c2f1ca1');
 
 
@@ -649,8 +649,6 @@ class IndexController extends Controller
             }
         } else
             $values = "N/A";
-        // } else
-        //     return $values = "Connection false!";
 
         //save views movie for day
         $day = Carbon::today('Asia/Ho_Chi_Minh')->subDays(0)->startOfDay();
@@ -673,7 +671,7 @@ class IndexController extends Controller
         $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
         $url_update = $api_ophim['pathImage'];
 
-        return view('pages.movie', compact('category', 'genre', 'movie', 'related', 'episode', 'episode_first', 'episode_current_list_count', 'times', 'values', 'url_update'));
+        return view('pages.movie', compact('category', 'genre', 'movie', 'related', 'episode', 'times', 'values', 'url_update'));
     }
     public function add_rating(Request $request)
     {

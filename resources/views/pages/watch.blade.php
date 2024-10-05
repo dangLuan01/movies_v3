@@ -23,6 +23,9 @@
 @endif
 
 <style>
+    .ht-header{
+        display: none;
+    }
     .video {
         position: relative;
         display: block;
@@ -38,9 +41,9 @@
         height: 530px;
     }
 
-    .common-hero {
+    /* .common-hero {
         height: 100px;
-    }
+    } */
 
     @media (max-width: 601px) {
         .videocontainer {
@@ -188,11 +191,14 @@
         display: none;
     }
 </style>
-<div class="hero common-hero">
+{{-- <div class="hero common-hero">
     <div class="container">
     </div>
-</div>
-<div class="page-single">
+</div> --}}
+<div class="page-single" style="padding: 0;">
+    <div>
+        <a href="javascript:history.back()"><img src="{{ asset('/images/icons/arrow.png') }}" style="height: 50px; width:60px"></a>
+    </div>
     <div class="videocontainer">
         <iframe id="mainiframe" class="video" frameborder="0"
             allow="accelerometer; autoplay=0; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -374,7 +380,7 @@
         }
         add_recent();
 </script>
-<script id="devtools-detection">
+{{-- <script id="devtools-detection">
     function onDevToolsOpen() {
 
             // Lấy đối tượng div bằng cách sử dụng id
@@ -403,5 +409,5 @@
             }
         }
         console.log(new DevToolsChecker());
-</script>
+</script> --}}
 @endsection

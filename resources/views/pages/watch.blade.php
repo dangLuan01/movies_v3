@@ -197,7 +197,7 @@
 </div> --}}
 <div class="page-single" style="padding: 0;">
     <div>
-        <a href="javascript:history.back()"><img src="{{ asset('/images/icons/arrow.png') }}" style="height: 50px; width:60px"></a>
+        <a href="{{ route('movie',$movie->slug) }}"><img src="{{ asset('/images/icons/arrow.png') }}" style="height: 50px; width:60px"></a>
     </div>
     <div class="videocontainer">
         <iframe id="mainiframe" class="video" frameborder="0"
@@ -380,7 +380,7 @@
         }
         add_recent();
 </script>
-{{-- <script id="devtools-detection">
+<script id="devtools-detection">
     function onDevToolsOpen() {
 
             // Lấy đối tượng div bằng cách sử dụng id
@@ -409,5 +409,5 @@
             }
         }
         console.log(new DevToolsChecker());
-</script> --}}
+</script>
 @endsection

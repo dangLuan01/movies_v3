@@ -9487,9 +9487,9 @@ header#headerv3-light {
 }
 
 @media (max-width: 767px) {
-    .top-search {
+    /* .top-search {
         display: none !important;
-    }
+    } */
     header .navbar-default {
         padding: 10px 0;
     }

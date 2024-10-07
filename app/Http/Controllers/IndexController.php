@@ -319,7 +319,7 @@ class IndexController extends Controller
             $thumb->where('is_thumbnail', 0);
         }])->with(['episode' => function ($ep) {
             $ep->orderBy('episode', 'ASC');
-        }])->where('status', 1)->where('category_id', $cate_movie->id)->paginate(20);
+        }])->where('status', 1)->where('category_id', $cate_movie->id)->orderBy('updated_at','DESC')->paginate(20);
 
         $movie_cate_with_ratings = [];
 
@@ -710,7 +710,7 @@ class IndexController extends Controller
         $category = Category::orderBy('id', 'ASC')->where('status', 1)->get();
         //$genre = Genre::where('status', 1)->orderBy('id', 'DESC')->get();
         //$country = Country::where('status', 1)->orderBy('id', 'DESC')->get();
-        $movie = Movie::with('category', 'genre', 'country', 'episode')->where('slug', $slug)->where('status', 1)->first();
+        $movie = Movie::with('category', 'episode')->where('slug', $slug)->where('status', 1)->first();
         
         
         //save views movie for day

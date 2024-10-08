@@ -63,8 +63,8 @@
 
         <div class="top-search">
             <select>
-                <option value="saab">Movie</option>
-                <option value="united">TV show</option>
+                <option value="0">Movie</option>
+                <option value="1">TV show</option>
             </select>
             <input id="timkiem" type="text" placeholder="Tìm kiếm phim cho bạn">
         </div>

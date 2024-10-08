@@ -87,7 +87,7 @@
                             }
                         </style>
 
-                        <div class="wishlist">
+                        <div class="hover-bnt wishlist ">
                         <a href="javacript:void(0)" id="{{ $movie->id }}" onclick="add_wishlist(this.id);" class="parent-btn"><i class="ion-heart heart"></i> Yêu thích</a>
                         </div>
                         <div class="hover-bnt">

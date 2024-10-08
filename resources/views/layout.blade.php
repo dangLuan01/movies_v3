@@ -125,6 +125,8 @@
             $('#timkiem').keyup(function() {
                 $('#result').html('');
                 var search = $('#timkiem').val();
+              
+               
                 if (search != '') {
                 $('#result').css('display', 'inherit');
                 function reqListener() {
@@ -162,12 +164,13 @@
                     $('#result').css('display', 'none');
                 }
             })
-            $('#result').on('click', 'li', function() {
+            $('body').on('click', function() {
                 // var click_text = $(this).text().split('->');
                 // $('#timkiem').val($.trim(click_text[0]));
                 // $("#result").html('');
-                // $('#result').css('display', 'none')
+                $('#result').css('display', 'none')
             });
+           
         })
     </script>
 </body>

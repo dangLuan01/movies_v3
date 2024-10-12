@@ -27,13 +27,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 class IndexController extends Controller
 {
-    public function search()
-    {
-        $category = Category::orderBy('id', 'ASC')->where('status', 1)->get();
-        return view('pages.search', compact('category'));
-    }
-
-
     public function timkiem()
     {
             $movie = Movie::where(function ($querys) {
@@ -391,7 +384,7 @@ class IndexController extends Controller
         $category = Category::orderBy('id', 'ASC')->where('status', 1)->get();
         $genre = Genre::where('status', 1)->orderBy('id', 'DESC')->get();
         $country = Country::where('status', 1)->orderBy('id', 'DESC')->get();
-        $tag = $tag;
+        //$tag = $tag;
         $movie_tag = Movie::join('movie_tags', 'movies.id', '=', 'movie_tags.movie_id')->where('tags', 'LIKE', '%' . $tag . '%')->where('status', 1)->with(['episode' => function ($query) {
             $query->orderBy('episode', 'ASC');
         }])->with(['movie_image' => function ($thumb) {
@@ -634,7 +627,7 @@ class IndexController extends Controller
             $query->orderBy('episode', 'ASC');
         }])->with(['movie_image' => function ($thumb) {
             $thumb->where('is_thumbnail', 1);
-        }])->paginate(5);
+        }])->limit(15)->get();
         //dd($related);
         // $episode_first = Episode::with('movie')->where('movie_id', $movie->id)->orderBy('episode', 'ASC')->take(1)->first();
         //lay tap phim

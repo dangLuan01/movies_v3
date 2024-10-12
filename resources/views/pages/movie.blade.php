@@ -283,9 +283,9 @@
                                                                             @else
                                                                                {{ asset('uploads/movie/' . $mov->movie_image->image) }} @endif" alt="{{ $mov->title }}">
                                             <div class="mv-item-infor">
-                                                <h6><a href="{{ route('movie', $mov->slug) }}">{{ $mov->title }} <span>({{ $movie->year }})</span></a></h6>
+                                                <h6><a href="{{ route('movie', $mov->slug) }}">{{ $mov->title }} <span>({{ $mov->year }})</span></a></h6>
                                                
-                                                <p class="run-time"> Run Time: 2h21’</p>
+                                                <p class="run-time"> Thời lượng: {{ $mov->time }}’</p>
                                               
                                             </div>
                                         </div>

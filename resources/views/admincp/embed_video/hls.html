@@ -773,7 +773,8 @@ Animações do botão.
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
         var link = getQuery('link');
-
+        // video:https://vod-evg4.tv360.vn/W9avRqDlEamqTyjlbO2i-w/1728415200/video1/2024/04/02/08/02e70897/6/video/avc1/5/media.m3u8
+        // audio:https://vod-evg4.tv360.vn/kS9R9Iio9GkiVDjqzh2QZA/1728415200/video1/2024/04/02/08/02e70897/6/audio/en/mp4a.40.2/2/media.m3u8
         var playerInstance = jwplayer('jwplayer');
         function setupVideo() {
 
@@ -781,14 +782,10 @@ Animações do botão.
                 key: "ITWMv7t88JGzI0xPwW8I0+LveiXX9SWbfdmt0ArUSyc=",
                 width: '100%',
                 height: '100%',
-                //sources: firstSource,
-                //file: link,
 
-                "playlist": [
-                    {
-                        "file": link,
-                    }
-                ],
+                "playlist":[{
+                    "file":link,
+                }],
                 playbackRateControls: true,
                 playbackRates: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2],
                 mute: false,
@@ -840,7 +837,7 @@ Animações do botão.
                         reloadTimes++;
                         if (message["message"] == "Error loading media: File could not be played") {
                             setTimeout(function () {
-                                jQuery("#embed-player").find(".jw-title-primary").text("Có chút vấn đề khi load phim. Đang thử lại...").show();
+                                jQuery("#jwplayer").find(".jw-title-primary").text("Có chút vấn đề khi load phim. Đang thử lại...").show();
                             }, 100);
                         }
                         setTimeout(function () {
@@ -850,8 +847,8 @@ Animações do botão.
                     } else {
                         if (message["message"] == "Error loading media: File could not be played") {
                             setTimeout(function () {
-                                jQuery("#embed-player").find(".jw-title-primary").text("Có chút vấn đề khi load phim").show();
-                                jQuery("#embed-player").find(".jw-title-secondary").text("Chạy lại trang (ấn F5) hoặc mở link khác bên dưới").show();
+                                jQuery("#jwplayer").find(".jw-title-primary").text("Có chút vấn đề khi load phim").show();
+                                jQuery("#jwplayer").find(".jw-title-secondary").text("Chạy lại trang (ấn F5) hoặc mở link khác bên dưới").show();
                             }, 100);
                         }
                     }

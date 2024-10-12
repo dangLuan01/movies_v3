@@ -74,7 +74,7 @@
                                                 @if ($image_check == 'https') {{ $url_update . $image }}
                                                     @else
                                                        {{ asset('uploads/movie/' . $movie['movie']->movie_image->image) }} @endif"
-                                                    alt="{{ $movie['movie']->title }}" width="190" height="284" style="width: 190px; height:230px;" loading="lazy">
+                                                    alt="{{ $movie['movie']->title }}" style="height:360px;" loading="lazy">
                                             </div>
                                             <div class="hvr-inner">
                                                 <a href="{{ route('movie', $movie['movie']->slug) }}"> Xem <i
@@ -106,7 +106,7 @@
                                                 @if ($image_check == 'https') {{ $url_update . $image }}
                                                     @else
                                                        {{ asset('uploads/movie/' . $movie['movie']->movie_image->image) }} @endif"
-                                                    alt="{{ $movie['movie']->title }}" width="190" height="284" style="width: 190px; height:230px;" loading="lazy">
+                                                    alt="{{ $movie['movie']->title }}" style="height:360px;" loading="lazy">
                                             </div>
                                             <div class="hvr-inner">
                                                 <a href="{{ route('movie',$movie['movie']->slug) }}"> Xem <i
@@ -140,7 +140,7 @@
                                                 @if ($image_check == 'https') {{ $url_update . $image }}
                                                     @else
                                                        {{ asset('uploads/movie/' . $movie['movie']->movie_image->image) }} @endif"
-                                                    alt="{{ $movie['movie']->title }}" width="190" height="284" style="width: 190px; height:230px;" loading="lazy">
+                                                    alt="{{ $movie['movie']->title }}" style="height:360px;" loading="lazy">
                                             </div>
                                             <div class="hvr-inner">
                                                 <a href="{{ route('movie',$movie['movie']->slug) }}"> Xem <i
@@ -187,7 +187,7 @@
                                                 @if ($image_check == 'https') {{ $url_update . $image }}
                                                     @else
                                                        {{ asset('uploads/movie/' . $movie['movie']->movie_image->image) }} @endif"
-                                                    alt="{{ $movie['movie']->title }}" width="190" height="284" style="width: 190px; height:230px;" loading="lazy">
+                                                    alt="{{ $movie['movie']->title }}" style="height:360px;" loading="lazy">
                                             </div>
                                             <div class="hvr-inner">
                                                 <a href="{{ route('movie',$movie['movie']->slug) }}"> Xem <i
@@ -232,7 +232,7 @@
                                                 @if ($image_check == 'https') {{ $url_update . $image }}
                                                     @else
                                                        {{ asset('uploads/movie/' . $movie['movie']->movie_image->image) }} @endif"
-                                                    alt="{{ $movie['movie']->title }}" width="190" height="284" style="width: 190px; height:230px;" loading="lazy">
+                                                    alt="{{ $movie['movie']->title }}" style="height:360px;" loading="lazy">
                                             </div>
                                             <div class="hvr-inner">
                                                 <a href="{{ route('movie',$movie['movie']->slug) }}"> Xem <i
@@ -351,7 +351,7 @@
                                                 @if ($image_check == 'https') {{ $url_update . $image }}
                                                     @else
                                                        {{ asset('uploads/movie/' . $movie['movie']->movie_image->image) }} @endif"
-                                                    alt="{{ $movie['movie']->title }}" width="190" height="284" style="width: 190px; height:230px;" loading="lazy">
+                                                    alt="{{ $movie['movie']->title }}" style="height:360px;" loading="lazy">
                                             </div>
                                             <div class="hvr-inner">
                                                 <a href="{{ route('movie',$movie['movie']->slug) }}"> Xem <i
@@ -396,7 +396,7 @@
                                                 @if ($image_check == 'https') {{ $url_update . $image }}
                                                     @else
                                                        {{ asset('uploads/movie/' . $movie['movie']->movie_image->image) }} @endif" 
-                                                loading="lazy" alt="{{ $movie['movie']->title }}" width="190" height="284" style="width: 190px; height:230px;">
+                                                loading="lazy" alt="{{ $movie['movie']->title }}" style="height:360px;">
                                             </div>
                                             <div class="hvr-inner">
                                                 <a href="{{ route('movie',$movie['movie']->slug) }}"> Xem <i

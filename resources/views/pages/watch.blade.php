@@ -255,7 +255,55 @@
 
     </div>
 </div>
+<div class="movie-items full-width" style="padding-left: 2%">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="title-hd">
+                <h2>Phim Tương Tự {{ $movie->title }}</h2>
+            </div>
+            <div class="tabs">
+                <ul class="tab-links">
+                    <li class="active"><a href="#tab22">Có thể xem thêm</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tab22" class="tab active" >
+                        <div class="row">
+                            <div class="slick-multiItem2">
+                                @foreach($movie_relate_with_ratings as $mov)
 
+                                <div class="slide-it">
+                                    <div class="movie-item">
+                                        <div class="mv-img">
+                                            <img src="@php
+                                            $image_check = substr($mov['movie']->movie_image->image, 0, 5);
+                                            $startPos = strpos($mov['movie']->movie_image->image, 'movies/');
+                                            $image = substr($mov['movie']->movie_image->image, $startPos + strlen('movies/')); @endphp
+                                            @if ($image_check == 'https') {{ $url_update . $image }}
+                                                @else
+                                                   {{ asset('uploads/movie/' . $mov['movie']->movie_image->image) }} @endif"
+                                                alt="{{ $mov['movie']->title }}" style="height:380px;" loading="lazy">
+                                        </div>
+                                        <div class="hvr-inner">
+                                            <a href="{{ route('movie',$mov['movie']->slug) }}"> Xem <i
+                                                    class="ion-android-arrow-dropright"></i> </a>
+                                        </div>
+                                        <div class="title-in">
+                                            <h6><a href="{{ route('movie', $mov['movie']->slug) }}">{{ $mov['movie']->title }}</a></h6>
+                                            <p><i class="ion-android-star"></i><span>
+                                               </span>{{ $mov['imdbRating'] }} /10</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var server_active = "{{ $server_active }}";

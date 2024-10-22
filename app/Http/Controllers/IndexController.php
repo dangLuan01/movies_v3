@@ -141,15 +141,15 @@ class IndexController extends Controller
                     ->get(['id', 'title', 'updated_at', 'imdb', 'slug']),
         
                 // Thêm Phim Mỹ Sắp Chiếu (us_coming)
-                'us_coming' => Movie::where('type_movie', 0)
-                    ->where('country_id', $country_ids)
-                    ->where('status', 0) 
-                    ->with(['episode', 'movie_image' => function ($thumb) {
-                        $thumb->where('is_thumbnail', 0);
-                    }])
-                    ->orderBy('updated_at', 'ASC') 
-                    ->limit(1)
-                    ->get(['id', 'title', 'updated_at', 'imdb', 'slug']),
+                // 'us_coming' => Movie::where('type_movie', 0)
+                //     ->where('country_id', $country_ids)
+                //     ->where('status', 0) 
+                //     ->with(['episode', 'movie_image' => function ($thumb) {
+                //         $thumb->where('is_thumbnail', 0);
+                //     }])
+                //     ->orderBy('updated_at', 'ASC') 
+                //     ->limit(1)
+                //     ->get(['id', 'title', 'updated_at', 'imdb', 'slug']),
             ];
         });
         
@@ -160,7 +160,7 @@ class IndexController extends Controller
         $us_movies = $movies_data['us_movies'];
         $horror_movies = $movies_data['horror_movies'];
         $tv_series = $movies_data['tv_series'];        
-        $us_coming = $movies_data['us_coming'];       
+        // $us_coming = $movies_data['us_coming'];       
      
 
         $all_movies = $hot_movies->concat($hoat_hinh_movies)
@@ -168,8 +168,8 @@ class IndexController extends Controller
         ->concat($oscar_movies)
         ->concat($us_movies)
         ->concat($horror_movies)
-        ->concat($tv_series)
-        ->concat($us_coming); 
+        ->concat($tv_series);
+        // ->concat($us_coming); 
 
         $hot_count = count($hot_movies);
         $hoat_hinh_count = count($hoat_hinh_movies);
@@ -178,7 +178,7 @@ class IndexController extends Controller
         $us_count = count($us_movies);
         $horror_count = count($horror_movies);
         $tv_series_count = count($tv_series);
-        $us_coming_count = count($us_coming);
+        // $us_coming_count = count($us_coming);
         
         $cache_key = 'movies_with_ratings';
         $cachedMovies = Cache::store('important_cache')->get($cache_key, []);
@@ -219,7 +219,7 @@ class IndexController extends Controller
         $movie_us_with_ratings = [];
         $movie_horror_with_ratings = [];
         $tv_series_with_ratings = [];
-        $movie_us_coming = [];
+        // $movie_us_coming = [];
 
         // Xử lý phản hồi cho tất cả các phim
         foreach ($all_movies as $key => $movie) {
@@ -263,19 +263,20 @@ class IndexController extends Controller
             'movie' => $horror_movies[$key - $hot_count - $hoat_hinh_count - $netflix_count - $oscar_count - $us_count],
             'imdbRating' => $imdbRating,
             ];
-        } elseif ($key < $hot_count + $hoat_hinh_count + $netflix_count + $oscar_count + $us_count + $horror_count + $tv_series_count) {
+        } else {
         // Phim bộ
             $tv_series_with_ratings[] = [
             'movie' => $tv_series[$key - $hot_count - $hoat_hinh_count - $netflix_count - $oscar_count - $us_count - $horror_count],
             'imdbRating' => $imdbRating,
             ];
-        } else {
-        // Phim Mỹ sắp chiếu
-            $movie_us_coming[] = [
-            'movie' => $us_coming[$key - $hot_count - $hoat_hinh_count - $netflix_count - $oscar_count - $us_count - $horror_count - $tv_series_count],
-            'imdbRating' => $imdbRating,
-            ];
-        }
+        } 
+        // else {
+        // // Phim Mỹ sắp chiếu
+        //     $movie_us_coming[] = [
+        //     'movie' => $us_coming[$key - $hot_count - $hoat_hinh_count - $netflix_count - $oscar_count - $us_count - $horror_count - $tv_series_count],
+        //     'imdbRating' => $imdbRating,
+        //     ];
+        // }
         }
         
          // TOP VIEW MOVIES
@@ -293,7 +294,7 @@ class IndexController extends Controller
         $api_ophim = Http::get('http://ophim1.com/danh-sach/phim-moi-cap-nhat');
         $url_update = $api_ophim['pathImage'];
       
-        return view('pages.home', compact('category', 'hot_with_ratings',  'movie_animation_with_ratings', 'movie_us_with_ratings', 'tv_series_with_ratings', 'movie_horror_with_ratings', 'url_update','movie_oscar_with_ratings','movie_netflix_with_ratings','movie_us_coming','topview'));
+        return view('pages.home', compact('category', 'hot_with_ratings',  'movie_animation_with_ratings', 'movie_us_with_ratings', 'tv_series_with_ratings', 'movie_horror_with_ratings', 'url_update','movie_oscar_with_ratings','movie_netflix_with_ratings','topview'));
     }
     public function category($slug)
     {

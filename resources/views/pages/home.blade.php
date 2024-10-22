@@ -54,8 +54,7 @@
                 <div class="tabs">
                     <ul class="tab-links">
                         <li class="active"><a href="#tab1">#Mới cập nhật</a></li>
-                        <li><a href="#tab3"> #Oscar </a></li>
-                        <li><a href="#tab2"> #Sắp chiếu</a></li>
+                        <li><a href="#tab2"> #Oscar </a></li>
                         
                     </ul>
                     <div class="tab-content">
@@ -93,39 +92,6 @@
                             </div>
                         </div>
                         <div id="tab2" class="tab">
-                            <div class="row">
-                                <div class="slick-multiItem2">
-                                    @foreach($movie_us_coming as $movie)
-                                    <div class="slide-it">
-                                        <div class="movie-item">
-                                            <div class="mv-img">
-                                                <img src="@php
-                                                $image_check = substr($movie['movie']->movie_image->image, 0, 5);
-                                                $startPos = strpos($movie['movie']->movie_image->image, 'movies/');
-                                                $image = substr($movie['movie']->movie_image->image, $startPos + strlen('movies/')); @endphp
-                                                @if ($image_check == 'https') {{ $url_update . $image }}
-                                                    @else
-                                                       {{ asset('uploads/movie/' . $movie['movie']->movie_image->image) }} @endif"
-                                                    alt="{{ $movie['movie']->title }}" style="height:360px;" loading="lazy">
-                                            </div>
-                                            <div class="hvr-inner">
-                                                <a href="{{ route('movie',$movie['movie']->slug) }}"> Xem <i
-                                                        class="ion-android-arrow-dropright"></i> </a>
-                                            </div>
-                                            <div class="title-in">
-                                                <h6><a href="{{ route('movie', $movie['movie']->slug) }}">{{ $movie['movie']->title }}</a></h6>
-                                                <p><i class="ion-android-star"></i><span>
-                                                </span>{{ $movie['imdbRating'] }} /10</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                    
-                                   
-                                </div>
-                            </div>
-                        </div>
-                        <div id="tab3" class="tab">
                             <div class="row">
                                 <div class="slick-multiItem2">
                                     @foreach($movie_oscar_with_ratings as $movie)

@@ -23,22 +23,22 @@
                 <div class="col-md-8 col-sm-12 col-xs-12">
 
                     <div class="flex-wrap-movielist">
-                        @foreach($movie_filter_with_ratings as $movie)
+                        @foreach($movie_filter as $movie)
                         
                         <div class="movie-item-style-2 movie-item-style-1">
                             <img src="@php
-                            $image_check = substr($movie['movie']->movie_image->image, 0, 5);
-                            $startPos = strpos($movie['movie']->movie_image->image, 'movies/');
-                            $image = substr($movie['movie']->movie_image->image, $startPos + strlen('movies/')); @endphp
+                            $image_check = substr($movie->movie_image->image, 0, 5);
+                            $startPos = strpos($movie->movie_image->image, 'movies/');
+                            $image = substr($movie->movie_image->image, $startPos + strlen('movies/')); @endphp
                                                             @if ($image_check == 'https') {{ $url_update . $image }}
                                                             @else
-                                                               {{ asset('uploads/movie/' . $movie['movie']->movie_image->image) }} @endif" alt="{{ $movie['movie']->title }}"style="width: 190px; height:230px;" loading="lazy">
+                                                               {{ asset('uploads/movie/' . $movie->movie_image->image) }} @endif" alt="{{ $movie->title }}"style="width: 190px; height:230px;" loading="lazy">
                             <div class="hvr-inner">
-                                <a href="{{ route('movie',$movie['movie']->slug) }}"> Xem <i class="ion-android-arrow-dropright"></i> </a>
+                                <a href="{{ route('movie',$movie->slug) }}"> Xem <i class="ion-android-arrow-dropright"></i> </a>
                             </div>
                             <div class="mv-item-infor">
-                                <h6><a href="#">{{ $movie['movie']->title }}</a></h6>
-                                <p class="rate"><i class="ion-android-star"></i><span>{{ $movie['imdbRating'] }}</span> /10</p>
+                                <h6><a href="#">{{ $movie->title }}</a></h6>
+                                
                             </div>
                         </div>
                         @endforeach

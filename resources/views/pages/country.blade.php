@@ -38,7 +38,6 @@
                             </div>
                             <div class="mv-item-infor">
                                 <h6><a href="#">{{ $movie['movie']->title }}</a></h6>
-                                <p class="rate"><i class="ion-android-star"></i><span>{{ $movie['imdbRating'] }}</span> /10</p>
                             </div>
                         </div>
                         @endforeach

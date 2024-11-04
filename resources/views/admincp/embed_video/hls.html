@@ -39,8 +39,112 @@
             font-size: 62.5%;
         }
 
-        .jw-rightclick {
-            display: none !important;
+        /* ADBlock Modal */
+        .modal {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 999;
+            font-family: "Rubik", Arial, sans-serif;
+        }
+
+        .modal .modal-container {
+            width: 60rem;
+            padding-bottom: 10rem;
+            background-color: var(--bg-black);
+            color: var(--bg-white);
+            border-radius: 0.3rem;
+        }
+
+        .modal .modal-container .modal-header {
+            position: relative;
+            border-radius: 0.3rem;
+            height: 30rem;
+        }
+
+        .modal .modal-container .modal-header strong {
+            position: absolute;
+            text-align: center;
+            top: 12rem;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            font-weight: 700;
+            font-size: 2rem;
+            color: var(--bg-white);
+        }
+
+        .modal .modal-container .modal-header::before {
+            top: 0;
+            left: 0;
+            content: "";
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: linear-gradient(0deg,
+                    var(--bg-black),
+                    rgba(24, 25, 25, 0.3) 150%);
+            border-radius: 0.3rem 0.3rem 0 0;
+        }
+
+        .modal .modal-container .modal-header::after {
+            top: 0;
+            left: 0;
+            content: "";
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: linear-gradient(0deg,
+                    var(--bg-black),
+                    rgba(24, 25, 25, 0.3) 100%);
+            border-radius: 0.3rem 0.3rem 0 0;
+        }
+
+        .modal .modal-container .modal-header .backdrop {
+            width: 100%;
+            height: 30rem;
+            border-radius: 0.3rem 0.3rem 0 0;
+        }
+
+        .modal .modal-container .modal-header button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 3.6rem;
+            height: 3.6rem;
+            background: var(--bg-black);
+            border: 0;
+            border-radius: 100%;
+            cursor: pointer;
+            transition: opacity 0.2s ease-in-out;
+            z-index: 999;
+        }
+
+        .modal .modal-container .modal-header button:hover {
+            opacity: 0.75;
+        }
+
+        .modal .modal-container .modal-header button img {
+            display: block;
+            width: 2.7rem;
+        }
+
+        .modal .modal-container .modal-body {
+            max-width: 50rem;
+            margin: 0 auto;
+            border-radius: 0 0 0.3rem 0.3rem;
+        }
+
+        .modal .modal-container .modal-body span {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1.7rem;
         }
 
         /* Skin Netflix CSS */
@@ -400,7 +504,7 @@ Tamanho e cor da slider.
         }
 
         .jwplayer.jw-skin-netflix .jw-controlbar .jw-slider-time .jw-slider-container .jw-buffer {
-            background-color: #888888;
+            background-color: #222323;
         }
 
         .jwplayer.jw-skin-netflix .jw-controlbar .jw-slider-time .jw-slider-container .jw-knob,
@@ -700,6 +804,33 @@ Animações do botão.
             background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij48cGF0aCBmaWxsPSJub25lIiBkPSJNMCAwaDI0djI0SDB6Ii8+PHBhdGggZD0iTTE4IDdoNHYyaC02VjNoMnY0ek04IDlIMlY3aDRWM2gydjZ6bTEwIDh2NGgtMnYtNmg2djJoLTR6TTggMTV2Nkg2di00SDJ2LTJoNnoiIGZpbGw9InJnYmEoMjI5LDksMjAsMSkiLz48L3N2Zz4=");
         }
 
+        /* Added New Icons - 06-26-22 */
+
+        /* 
+Icone de Share.
+*/
+        .jwplayer.jw-skin-netflix .jw-settings-sharing .jw-svg-icon-sharing path {
+            display: none;
+        }
+
+        .jwplayer.jw-skin-netflix .jw-settings-sharing .jw-svg-icon-sharing {
+            background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij48cGF0aCBmaWxsPSJub25lIiBkPSJNMCAwaDI0djI0SDB6Ii8+PHBhdGggZD0iTTEzLjEyIDE3LjAyM2wtNC4xOTktMi4yOWE0IDQgMCAxIDEgMC01LjQ2NWw0LjItMi4yOWE0IDQgMCAxIDEgLjk1OSAxLjc1NWwtNC4yIDIuMjlhNC4wMDggNC4wMDggMCAwIDEgMCAxLjk1NGw0LjE5OSAyLjI5YTQgNCAwIDEgMS0uOTU5IDEuNzU1ek02IDE0YTIgMiAwIDEgMCAwLTQgMiAyIDAgMCAwIDAgNHptMTEtNmEyIDIgMCAxIDAgMC00IDIgMiAwIDAgMCAwIDR6bTAgMTJhMiAyIDAgMSAwIDAtNCAyIDIgMCAwIDAgMCA0eiIgZmlsbD0icmdiYSgyNDcsMjQ2LDI0NywxKSIvPjwvc3ZnPg==");
+            background-repeat: no-repeat;
+            background-position: center;
+            -webkit-transition: 0.2s;
+            transition: 0.2s;
+            background-size: 100%;
+        }
+
+        .jwplayer.jw-skin-netflix .jw-settings-sharing:hover .jw-svg-icon-sharing {
+            background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij48cGF0aCBmaWxsPSJub25lIiBkPSJNMCAwaDI0djI0SDB6Ii8+PHBhdGggZD0iTTEzLjEyIDE3LjAyM2wtNC4xOTktMi4yOWE0IDQgMCAxIDEgMC01LjQ2NWw0LjItMi4yOWE0IDQgMCAxIDEgLjk1OSAxLjc1NWwtNC4yIDIuMjlhNC4wMDggNC4wMDggMCAwIDEgMCAxLjk1NGw0LjE5OSAyLjI5YTQgNCAwIDEgMS0uOTU5IDEuNzU1ek02IDE0YTIgMiAwIDEgMCAwLTQgMiAyIDAgMCAwIDAgNHptMTEtNmEyIDIgMCAxIDAgMC00IDIgMiAwIDAgMCAwIDR6bTAgMTJhMiAyIDAgMSAwIDAtNCAyIDIgMCAwIDAgMCA0eiIgZmlsbD0icmdiYSgyMjksOSwyMCwxKSIvPjwvc3ZnPg==");
+            background-repeat: no-repeat;
+            background-position: center;
+            -webkit-transition: 0.2s;
+            transition: 0.2s;
+            background-size: 100%;
+        }
+
         /* 
 ícone de áudio.
 */
@@ -764,9 +895,6 @@ Animações do botão.
 </head>
 
 <body>
-    <video controls="true">
-        <source src="https://cloud1.toomva.com/825kmp111/Epic-2013-3.mp4" type="video/mp4">
-    </video>
     <div id="jwplayer"></div>
     <script>
         function getQuery(name) {
@@ -776,18 +904,17 @@ Animações do botão.
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
         var link = getQuery('link');
-        // video:https://vod-evg4.tv360.vn/W9avRqDlEamqTyjlbO2i-w/1728415200/video1/2024/04/02/08/02e70897/6/video/avc1/5/media.m3u8
-        // audio:https://vod-evg4.tv360.vn/kS9R9Iio9GkiVDjqzh2QZA/1728415200/video1/2024/04/02/08/02e70897/6/audio/en/mp4a.40.2/2/media.m3u8
         var playerInstance = jwplayer('jwplayer');
         function setupVideo() {
 
             playerInstance.setup({
                 key: "ITWMv7t88JGzI0xPwW8I0+LveiXX9SWbfdmt0ArUSyc=",
+                controls: true,
                 width: '100%',
                 height: '100%',
 
-                "playlist":[{
-                    "file":link,
+                "playlist": [{
+                    "file": link,
                 }],
                 playbackRateControls: true,
                 playbackRates: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2],
@@ -804,33 +931,47 @@ Animações do botão.
             setUpVideoEvent();
 
         }
-
-
         this.setUpVideoEvent = function () {
 
             playerInstance.on("ready", function () {
+                // Move the timeslider in-line with other controls
+                const playerContainer = playerInstance.getContainer();
+                const buttonContainer = playerContainer.querySelector(".jw-button-container");
+                const spacer = buttonContainer.querySelector(".jw-spacer");
+                const timeSlider = playerContainer.querySelector(".jw-slider-time");
+                buttonContainer.replaceChild(timeSlider, spacer);
 
-                if (seekTimeOut != null) {
-                    clearTimeout(seekTimeOut);
-                }
+                // Forward 10 seconds
+                const rewindContainer = playerContainer.querySelector(
+                    ".jw-display-icon-rewind"
+                );
+                const forwardContainer = rewindContainer.cloneNode(true);
+                const forwardDisplayButton = forwardContainer.querySelector(
+                    ".jw-icon-rewind"
+                );
+                forwardDisplayButton.style.transform = "scaleX(-1)";
+                forwardDisplayButton.ariaLabel = "Forward 10 Seconds";
+                const nextContainer = playerContainer.querySelector(".jw-display-icon-next");
+                nextContainer.parentNode.insertBefore(forwardContainer, nextContainer);
 
-
-                if (timeToSeek > 8) seekTimeOut = setTimeout(function () {
-                    playerInstance.seek(timeToSeek);
-
-                    manualSeek = false;
-                }, 500);
-
-                if (playTimeout != null) {
-                    clearTimeout(playTimeout);
-                    playTimeout = null;
-                }
-                playTimeout = setTimeout(function () {
-                    playerInstance.play(true);
-                    manualSeek = false;
-                }, 1000);
-
-
+                // control bar icon
+                playerContainer.querySelector(".jw-display-icon-next").style.display = "none"; // hide next button
+                const rewindControlBarButton = buttonContainer.querySelector(
+                    ".jw-icon-rewind"
+                );
+                const forwardControlBarButton = rewindControlBarButton.cloneNode(true);
+                forwardControlBarButton.style.transform = "scaleX(-1)";
+                forwardControlBarButton.ariaLabel = "Forward 10 Seconds";
+                rewindControlBarButton.parentNode.insertBefore(
+                    forwardControlBarButton,
+                    rewindControlBarButton.nextElementSibling
+                );
+                // add onclick handlers
+                [forwardDisplayButton, forwardControlBarButton].forEach((button) => {
+                    button.onclick = () => {
+                        playerInstance.seek(playerInstance.getPosition() + 10);
+                    };
+                });
             })
                 .on("error", function (message) {
                     var time = playerInstance.getPosition();
@@ -855,25 +996,7 @@ Animações do botão.
                         }
                     }
                 })
-
-                .on("seek", function (event) {
-                    manualSeek = true;
-                    timeToSeek = event.offset;
-                })
-                .on("seeked", function (event) {
-                    manualSeek = false;
-                })
-            // Rewind, Forward buttons
-            playerInstance.addButton('https://rapidvid.net/ifr/vod/img/fw-10.svg', "seek 10s", function () {
-                playerInstance.seek(playerInstance.getPosition() + 10);
-            }, "next10s");
-
-            playerInstance.addButton("https://rapidvid.net/ifr/vod/img/rw-10.svg", "back 10s", function () {
-                playerInstance.seek(playerInstance.getPosition() - 10);
-            }, "back10s");
-
         }
         setupVideo();
-
     </script>
 </body>

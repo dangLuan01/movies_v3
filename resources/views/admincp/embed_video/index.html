@@ -766,8 +766,6 @@ Animações do botão.
 <body>
     <div id="jwplayer"></div>
     <script>
-
-
         var title = parent.player_aaaa.vod_data.vod_name;
 
         function getQuery(name) {
@@ -828,7 +826,7 @@ Animações do botão.
                     "playlist": [
                         {
                             "file": link,
-                            "title":title,
+                            "title": title,
                             "description": "Bạn đang xem",
                             "tracks": [{
                                 "kind": "captions",
@@ -919,7 +917,44 @@ Animações do botão.
             }
 
             playerInstance.on("ready", function () {
+                // Move the timeslider in-line with other controls
+                const playerContainer = playerInstance.getContainer();
+                const buttonContainer = playerContainer.querySelector(".jw-button-container");
+                const spacer = buttonContainer.querySelector(".jw-spacer");
+                const timeSlider = playerContainer.querySelector(".jw-slider-time");
+                buttonContainer.replaceChild(timeSlider, spacer);
 
+                // Forward 10 seconds
+                const rewindContainer = playerContainer.querySelector(
+                    ".jw-display-icon-rewind"
+                );
+                const forwardContainer = rewindContainer.cloneNode(true);
+                const forwardDisplayButton = forwardContainer.querySelector(
+                    ".jw-icon-rewind"
+                );
+                forwardDisplayButton.style.transform = "scaleX(-1)";
+                forwardDisplayButton.ariaLabel = "Forward 10 Seconds";
+                const nextContainer = playerContainer.querySelector(".jw-display-icon-next");
+                nextContainer.parentNode.insertBefore(forwardContainer, nextContainer);
+
+                // control bar icon
+                playerContainer.querySelector(".jw-display-icon-next").style.display = "none"; // hide next button
+                const rewindControlBarButton = buttonContainer.querySelector(
+                    ".jw-icon-rewind"
+                );
+                const forwardControlBarButton = rewindControlBarButton.cloneNode(true);
+                forwardControlBarButton.style.transform = "scaleX(-1)";
+                forwardControlBarButton.ariaLabel = "Forward 10 Seconds";
+                rewindControlBarButton.parentNode.insertBefore(
+                    forwardControlBarButton,
+                    rewindControlBarButton.nextElementSibling
+                );
+                // add onclick handlers
+                [forwardDisplayButton, forwardControlBarButton].forEach((button) => {
+                    button.onclick = () => {
+                        playerInstance.seek(playerInstance.getPosition() + 10);
+                    };
+                });
                 playerInstance.on('time', function (event) {
                     var startTimeToRemove = 596; // Đơn vị: giây
                     var endTimeToRemove = 622;   // Đơn vị: giây
@@ -982,23 +1017,6 @@ Animações do botão.
                         }
                     }
                 })
-
-                .on("seek", function (event) {
-                    manualSeek = true;
-                    timeToSeek = event.offset;
-                })
-                .on("seeked", function (event) {
-                    manualSeek = false;
-                })
-            // Rewind, Forward buttons
-            playerInstance.addButton('https://rapidvid.net/ifr/vod/img/fw-10.svg', "next 10s", function () {
-                playerInstance.seek(playerInstance.getPosition() + 10);
-            }, "next10s");
-
-            playerInstance.addButton("https://rapidvid.net/ifr/vod/img/rw-10.svg", "back 10s", function () {
-                playerInstance.seek(playerInstance.getPosition() - 10);
-            }, "back10s");
-
         }
         setupVideo();
 

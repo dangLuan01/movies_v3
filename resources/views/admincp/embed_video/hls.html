@@ -913,9 +913,22 @@ Icone de Share.
                 width: '100%',
                 height: '100%',
 
-                "playlist": [{
-                    "file": link,
-                }],
+                playlist: [
+                    {
+                        sources: [
+                            {
+                                file:link,
+                            },
+
+                        ],
+                        // tracks: [
+                        //     {
+                        //         file: "https://cdn.jwplayer.com/strips/iYfADWO1-120.vtt",
+                        //         kind: "thumbnails"
+                        //     }
+                        // ]
+                    }
+                ],
                 playbackRateControls: true,
                 playbackRates: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2],
                 mute: false,
